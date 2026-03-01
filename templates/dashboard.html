@@ -1,0 +1,229 @@
+{% extends 'layout.html' %}
+
+{% block title %}Fitness Dashboard - FitnessNavigator{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/premium-ui.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page" style="padding-top: 100px; min-height: 100vh; background: var(--dark);">
+    <div class="container">
+    <!-- AI Recommendations Section -->
+    <section class="ai-recommendations mb-5">
+        <div class="glass-card p-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="ai-icon">🤖</div>
+                <h3 class="mb-0 ms-3">AI Recommendations</h3>
+            </div>
+            <div class="row g-3">
+                <div class="col-lg-4 col-md-6">
+                    <div class="recommendation-card">
+                        <div class="rec-icon">🏃‍♂️</div>
+                        <h5>Optimal Workout Time</h5>
+                        <p>Your energy peaks at 6 PM. Schedule intense workouts then for 23% better performance.</p>
+                        <button class="btn-modern btn-sm" onclick="scheduleWorkout()">Schedule Now</button>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="recommendation-card">
+                        <div class="rec-icon">🥗</div>
+                        <h5>Nutrition Boost</h5>
+                        <p>Add 15g more protein to reach your muscle-building goals. Try Greek yogurt or chicken.</p>
+                        <button class="btn-modern btn-sm" onclick="viewNutritionFoods()">View Foods</button>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="recommendation-card">
+                        <div class="rec-icon">😴</div>
+                        <h5>Recovery Alert</h5>
+                        <p>Your sleep quality dropped 18%. Consider a rest day or light yoga session.</p>
+                        <button class="btn-modern btn-sm" onclick="showRestPlan()">Rest Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions mb-5">
+        <div class="row g-3">
+            <div class="col-lg-3 col-md-6">
+                <div class="action-card glass-card text-center p-4">
+                    <div class="action-icon">🏋️‍♂️</div>
+                    <h5>Start Workout</h5>
+                    <p>AI-guided session with real-time form correction</p>
+                    <a href="{{ url_for('workout_plan') }}" class="btn-modern w-100">Begin</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="action-card glass-card text-center p-4 h-100">
+                    <div class="action-icon">📸</div>
+                    <h5>Scan Meal</h5>
+                    <p>Instant nutrition analysis with AI food recognition</p>
+                    <a href="{{ url_for('meal_scanner') }}" class="btn-modern w-100">Scan</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="action-card glass-card text-center p-4 h-100">
+                    <div class="action-icon">📊</div>
+                    <h5>View Progress</h5>
+                    <p>Detailed analytics and body transformation</p>
+                    <a href="{{ url_for('progress') }}" class="btn-modern w-100">Analyze</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="action-card glass-card text-center p-4">
+                    <div class="action-icon">🎯</div>
+                    <h5>Set Goals</h5>
+                    <p>AI-optimized targets based on your progress</p>
+                    <button class="btn-modern w-100" onclick="openGoalSetter()">Set Goals</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Today's Schedule -->
+    <section class="todays-schedule mb-5">
+        <div class="glass-card p-4">
+            <h3 class="mb-4">Today's Schedule</h3>
+            <div class="schedule-timeline">
+                <div class="schedule-item completed">
+                    <div class="schedule-time">7:00 AM</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">Morning Cardio ✅</div>
+                        <div class="schedule-desc">30 min run - 320 calories burned</div>
+                    </div>
+                </div>
+                <div class="schedule-item active">
+                    <div class="schedule-time">12:00 PM</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">Lunch Break 🍽️</div>
+                        <div class="schedule-desc">Scan your meal for nutrition tracking</div>
+                    </div>
+                </div>
+                <div class="schedule-item upcoming">
+                    <div class="schedule-time">6:00 PM</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">Strength Training 💪</div>
+                        <div class="schedule-desc">Upper body focus - 45 minutes</div>
+                    </div>
+                </div>
+                <div class="schedule-item upcoming">
+                    <div class="schedule-time">9:00 PM</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">Recovery & Stretch 🧘‍♂️</div>
+                        <div class="schedule-desc">15 min guided meditation</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Feed -->
+    <section class="social-feed mb-5">
+        <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">Community Feed</h3>
+                <button class="btn-modern btn-sm">Join Challenge</button>
+            </div>
+            <div class="feed-items">
+                <div class="feed-item">
+                    <div class="feed-avatar">👨‍💼</div>
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <strong>Alex M.</strong> completed a workout
+                            <span class="feed-time">2 hours ago</span>
+                        </div>
+                        <div class="feed-text">Just crushed my PR on deadlifts! 💪 225lbs x 5 reps</div>
+                        <div class="feed-stats">
+                            <span class="feed-stat">❤️ 12</span>
+                            <span class="feed-stat">💬 3</span>
+                            <span class="feed-stat">🔥 5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-avatar">👩‍🦰</div>
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <strong>Sarah K.</strong> shared a meal
+                            <span class="feed-time">4 hours ago</span>
+                        </div>
+                        <div class="feed-text">Perfect post-workout meal! 🥗 Grilled chicken with quinoa</div>
+                        <div class="feed-stats">
+                            <span class="feed-stat">❤️ 8</span>
+                            <span class="feed-stat">💬 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+</div>
+
+<!-- Goal Setting Modal -->
+<div class="modal fade" id="goalModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h5 class="modal-title">🎯 Set Your Fitness Goals</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="goal-categories">
+                    <div class="goal-category">
+                        <h6>Weight Goals</h6>
+                        <div class="goal-options">
+                            <label class="goal-option">
+                                <input type="radio" name="weightGoal" value="lose">
+                                <span>Lose Weight</span>
+                            </label>
+                            <label class="goal-option">
+                                <input type="radio" name="weightGoal" value="maintain">
+                                <span>Maintain Weight</span>
+                            </label>
+                            <label class="goal-option">
+                                <input type="radio" name="weightGoal" value="gain">
+                                <span>Gain Weight</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="goal-category">
+                        <h6>Fitness Goals</h6>
+                        <div class="goal-options">
+                            <label class="goal-option">
+                                <input type="checkbox" name="fitnessGoal" value="strength">
+                                <span>Build Strength</span>
+                            </label>
+                            <label class="goal-option">
+                                <input type="checkbox" name="fitnessGoal" value="endurance">
+                                <span>Improve Endurance</span>
+                            </label>
+                            <label class="goal-option">
+                                <input type="checkbox" name="fitnessGoal" value="flexibility">
+                                <span>Increase Flexibility</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern" onclick="saveGoals()">Save Goals</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard-integration.js') }}"></script>
+<script src="{{ url_for('static', filename='js/progress-dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/wearable-integration.js') }}"></script>
+<script src="{{ url_for('static', filename='js/social-challenges.js') }}"></script>
+
+{% endblock %}

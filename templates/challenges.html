@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block title %}Fitness Challenges - FitnessNavigator{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/premium-ui.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="challenges-page" style="padding-top: 100px; min-height: 100vh; background: var(--dark);">
+    <div class="container">
+        <!-- Page will be populated by JavaScript -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/social-challenges.js') }}"></script>
+{% endblock %}

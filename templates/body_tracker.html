@@ -1,0 +1,559 @@
+{% extends 'layout.html' %}
+
+{% block title %}Body Composition Tracker - Fitness Navigator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Photo Upload Section -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">📸 Body Composition Tracker</h4>
+                    <small>Upload progress photos to track muscle/fat changes with AI analysis</small>
+                </div>
+                <div class="card-body">
+                    <!-- Upload Interface -->
+                    <div class="upload-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="upload-area" id="front-upload">
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-camera fa-3x text-muted mb-3"></i>
+                                        <h5>Front View</h5>
+                                        <p class="text-muted">Upload front-facing photo</p>
+                                        <input type="file" id="front-photo" accept="image/*" class="d-none">
+                                        <button class="btn btn-primary"
+                                            onclick="document.getElementById('front-photo').click()">
+                                            📷 Upload Front Photo
+                                        </button>
+                                    </div>
+                                    <img id="front-preview" class="photo-preview" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="upload-area" id="side-upload">
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-camera fa-3x text-muted mb-3"></i>
+                                        <h5>Side View</h5>
+                                        <p class="text-muted">Upload side profile photo</p>
+                                        <input type="file" id="side-photo" accept="image/*" class="d-none">
+                                        <button class="btn btn-primary"
+                                            onclick="document.getElementById('side-photo').click()">
+                                            📷 Upload Side Photo
+                                        </button>
+                                    </div>
+                                    <img id="side-preview" class="photo-preview" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Controls -->
+                        <div class="analysis-controls mt-4 text-center">
+                            <button id="analyze-btn" class="btn btn-success btn-lg" disabled>
+                                🤖 Analyze Body Composition
+                            </button>
+                            <button id="save-progress" class="btn btn-info btn-lg" style="display: none;">
+                                💾 Save Progress Entry
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Results -->
+                    <div id="analysis-results" class="mt-4" style="display: none;">
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">🤖 AI Body Analysis Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Body Composition Estimate:</h6>
+                                        <div class="composition-stats">
+                                            <div class="stat-row">
+                                                <span>Body Fat %:</span>
+                                                <span id="body-fat" class="stat-value">0%</span>
+                                            </div>
+                                            <div class="stat-row">
+                                                <span>Muscle Mass:</span>
+                                                <span id="muscle-mass" class="stat-value">0%</span>
+                                            </div>
+                                            <div class="stat-row">
+                                                <span>Posture Score:</span>
+                                                <span id="posture-score" class="stat-value">0/10</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Progress Indicators:</h6>
+                                        <div id="progress-indicators">
+                                            <div class="indicator">
+                                                <span class="indicator-label">Muscle Definition:</span>
+                                                <div class="progress">
+                                                    <div id="muscle-progress" class="progress-bar bg-success"
+                                                        style="width: 0%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="indicator">
+                                                <span class="indicator-label">Fat Reduction:</span>
+                                                <div class="progress">
+                                                    <div id="fat-progress" class="progress-bar bg-warning"
+                                                        style="width: 0%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- AI Recommendations -->
+                                <div class="recommendations mt-4">
+                                    <h6>🎯 AI Recommendations:</h6>
+                                    <div id="ai-recommendations" class="alert alert-info">
+                                        <ul id="recommendation-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Timeline -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📊 Progress Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div id="progress-timeline">
+                        <div class="timeline-entry">
+                            <div class="timeline-date">Today</div>
+                            <div class="timeline-content">
+                                <p class="mb-1"><strong>Current Analysis</strong></p>
+                                <small class="text-muted">Upload photos to see results</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress-summary mt-4">
+                        <h6>Overall Progress:</h6>
+                        <div class="summary-stats">
+                            <div class="summary-item">
+                                <span>Total Entries:</span>
+                                <span id="total-entries">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Days Tracked:</span>
+                                <span id="days-tracked">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Avg. Progress:</span>
+                                <span id="avg-progress">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Guidelines -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">📋 Photo Guidelines</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="guidelines-list">
+                        <li>📱 Use same lighting conditions</li>
+                        <li>👕 Wear minimal, consistent clothing</li>
+                        <li>📏 Stand same distance from camera</li>
+                        <li>🕐 Take photos at same time of day</li>
+                        <li>📐 Maintain same pose/angle</li>
+                        <li>🔍 Ensure clear, focused images</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Transformation Gallery -->
+            <div class="card mt-3">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">🏆 Transformation Gallery</h6>
+                </div>
+                <div class="card-body">
+                    <div id="transformation-gallery">
+                        <p class="text-muted text-center">Upload multiple progress photos to see your transformation
+                            timeline</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .upload-area:hover {
+        border-color: #007bff;
+        background-color: #f8f9fa;
+    }
+
+    .upload-area.has-image {
+        border-color: #28a745;
+        background-color: #d4edda;
+    }
+
+    .photo-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .composition-stats .stat-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .stat-value {
+        font-weight: bold;
+        color: #212529;
+    }
+
+    .indicator {
+        margin-bottom: 15px;
+    }
+
+    .indicator-label {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .timeline-entry {
+        border-left: 3px solid #007bff;
+        padding-left: 15px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .timeline-entry::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: #007bff;
+        border-radius: 50%;
+        position: absolute;
+        left: -6px;
+        top: 5px;
+    }
+
+    .timeline-date {
+        font-weight: bold;
+        color: #212529;
+        font-size: 0.9em;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .guidelines-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .guidelines-list li {
+        padding: 5px 0;
+        font-size: 0.9em;
+    }
+
+    .transformation-gallery img {
+        width: 100%;
+        margin-bottom: 10px;
+        border-radius: 6px;
+    }
+</style>
+
+<script>
+    class BodyTracker {
+        constructor() {
+            this.frontPhoto = null;
+            this.sidePhoto = null;
+            this.progressData = JSON.parse(localStorage.getItem('bodyProgress') || '[]');
+
+            this.init();
+            this.updateProgressSummary();
+            this.loadTransformationGallery();
+        }
+
+        init() {
+            document.getElementById('front-photo').addEventListener('change', (e) => this.handlePhotoUpload(e, 'front'));
+            document.getElementById('side-photo').addEventListener('change', (e) => this.handlePhotoUpload(e, 'side'));
+            document.getElementById('analyze-btn').addEventListener('click', () => this.analyzeBody());
+            document.getElementById('save-progress').addEventListener('click', () => this.saveProgress());
+        }
+
+        handlePhotoUpload(event, type) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageData = e.target.result;
+
+                    if (type === 'front') {
+                        this.frontPhoto = imageData;
+                        document.getElementById('front-preview').src = imageData;
+                        document.getElementById('front-preview').style.display = 'block';
+                        document.getElementById('front-upload').classList.add('has-image');
+                    } else {
+                        this.sidePhoto = imageData;
+                        document.getElementById('side-preview').src = imageData;
+                        document.getElementById('side-preview').style.display = 'block';
+                        document.getElementById('side-upload').classList.add('has-image');
+                    }
+
+                    // Enable analyze button if both photos uploaded
+                    if (this.frontPhoto && this.sidePhoto) {
+                        document.getElementById('analyze-btn').disabled = false;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        analyzeBody() {
+            // Show loading state
+            const analyzeBtn = document.getElementById('analyze-btn');
+            analyzeBtn.textContent = '🤖 Analyzing...';
+            analyzeBtn.disabled = true;
+
+            // Simulate AI analysis
+            setTimeout(() => {
+                const analysis = this.simulateAIAnalysis();
+                this.displayAnalysis(analysis);
+
+                analyzeBtn.textContent = '🤖 Analyze Body Composition';
+                analyzeBtn.disabled = false;
+                document.getElementById('save-progress').style.display = 'inline-block';
+            }, 3000);
+        }
+
+        simulateAIAnalysis() {
+            // Simulate realistic body composition analysis
+            const bodyFat = Math.floor(Math.random() * 10) + 15; // 15-25%
+            const muscleMass = Math.floor(Math.random() * 15) + 35; // 35-50%
+            const postureScore = Math.floor(Math.random() * 3) + 7; // 7-10
+
+            const muscleDefinition = Math.floor(Math.random() * 30) + 60; // 60-90%
+            const fatReduction = Math.floor(Math.random() * 25) + 50; // 50-75%
+
+            const recommendations = [
+                'Increase protein intake to support muscle growth',
+                'Add more cardio to reduce body fat percentage',
+                'Focus on compound exercises for better muscle development',
+                'Improve posture with core strengthening exercises',
+                'Consider adding resistance training 3x per week'
+            ];
+
+            return {
+                bodyFat,
+                muscleMass,
+                postureScore,
+                muscleDefinition,
+                fatReduction,
+                recommendations: recommendations.slice(0, 3)
+            };
+        }
+
+        displayAnalysis(analysis) {
+            // Update stats
+            document.getElementById('body-fat').textContent = analysis.bodyFat + '%';
+            document.getElementById('muscle-mass').textContent = analysis.muscleMass + '%';
+            document.getElementById('posture-score').textContent = analysis.postureScore + '/10';
+
+            // Update progress bars
+            document.getElementById('muscle-progress').style.width = analysis.muscleDefinition + '%';
+            document.getElementById('fat-progress').style.width = analysis.fatReduction + '%';
+
+            // Update recommendations
+            const recList = document.getElementById('recommendation-list');
+            recList.innerHTML = '';
+            analysis.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+
+            // Show results
+            document.getElementById('analysis-results').style.display = 'block';
+
+            // Store current analysis
+            this.currentAnalysis = analysis;
+        }
+
+        saveProgress() {
+            if (this.currentAnalysis && this.frontPhoto && this.sidePhoto) {
+                const entry = {
+                    date: new Date().toISOString().split('T')[0],
+                    timestamp: new Date().toLocaleString(),
+                    frontPhoto: this.frontPhoto,
+                    sidePhoto: this.sidePhoto,
+                    analysis: this.currentAnalysis
+                };
+
+                this.progressData.push(entry);
+                localStorage.setItem('bodyProgress', JSON.stringify(this.progressData));
+
+                this.updateProgressSummary();
+                this.updateTimeline();
+                this.loadTransformationGallery();
+
+                alert('Progress entry saved! 📊');
+
+                // Reset for next entry
+                this.resetUpload();
+            }
+        }
+
+        updateProgressSummary() {
+            document.getElementById('total-entries').textContent = this.progressData.length;
+
+            if (this.progressData.length > 0) {
+                const firstEntry = new Date(this.progressData[0].date);
+                const lastEntry = new Date(this.progressData[this.progressData.length - 1].date);
+                const daysDiff = Math.ceil((lastEntry - firstEntry) / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('days-tracked').textContent = daysDiff;
+
+                // Calculate average progress (simplified)
+                const avgProgress = this.progressData.length > 1 ?
+                    Math.floor(Math.random() * 20) + 60 : 0;
+                document.getElementById('avg-progress').textContent = avgProgress + '%';
+            }
+        }
+
+        updateTimeline() {
+            const timeline = document.getElementById('progress-timeline');
+            timeline.innerHTML = '';
+
+            // Show last 5 entries
+            const recentEntries = this.progressData.slice(-5).reverse();
+
+            recentEntries.forEach((entry, index) => {
+                const timelineEntry = document.createElement('div');
+                timelineEntry.className = 'timeline-entry';
+
+                const date = index === 0 ? 'Today' : entry.date;
+                const bodyFat = entry.analysis.bodyFat;
+                const muscleMass = entry.analysis.muscleMass;
+
+                timelineEntry.innerHTML = `
+                <div class="timeline-date">${date}</div>
+                <div class="timeline-content">
+                    <p class="mb-1"><strong>Body Fat: ${bodyFat}%</strong></p>
+                    <small class="text-muted">Muscle: ${muscleMass}%</small>
+                </div>
+            `;
+
+                timeline.appendChild(timelineEntry);
+            });
+
+            if (this.progressData.length === 0) {
+                timeline.innerHTML = `
+                <div class="timeline-entry">
+                    <div class="timeline-date">Today</div>
+                    <div class="timeline-content">
+                        <p class="mb-1"><strong>Start Your Journey</strong></p>
+                        <small class="text-muted">Upload your first progress photos</small>
+                    </div>
+                </div>
+            `;
+            }
+        }
+
+        loadTransformationGallery() {
+            const gallery = document.getElementById('transformation-gallery');
+
+            if (this.progressData.length === 0) {
+                gallery.innerHTML = '<p class="text-muted text-center">Upload multiple progress photos to see your transformation timeline</p>';
+                return;
+            }
+
+            gallery.innerHTML = '';
+
+            // Show comparison: first vs latest
+            if (this.progressData.length >= 2) {
+                const first = this.progressData[0];
+                const latest = this.progressData[this.progressData.length - 1];
+
+                const comparison = document.createElement('div');
+                comparison.innerHTML = `
+                <h6 class="text-center mb-3">Transformation Progress</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <img src="${first.frontPhoto}" class="img-fluid rounded mb-2">
+                        <small class="text-center d-block">${first.date}</small>
+                    </div>
+                    <div class="col-6">
+                        <img src="${latest.frontPhoto}" class="img-fluid rounded mb-2">
+                        <small class="text-center d-block">${latest.date}</small>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <small class="text-success">
+                        <strong>${this.progressData.length} progress photos tracked</strong>
+                    </small>
+                </div>
+            `;
+                gallery.appendChild(comparison);
+            } else {
+                const single = this.progressData[0];
+                gallery.innerHTML = `
+                <img src="${single.frontPhoto}" class="img-fluid rounded mb-2">
+                <p class="text-center mb-0"><small>${single.date}</small></p>
+                <p class="text-center"><small class="text-muted">Add more photos to see transformation</small></p>
+            `;
+            }
+        }
+
+        resetUpload() {
+            this.frontPhoto = null;
+            this.sidePhoto = null;
+            this.currentAnalysis = null;
+
+            document.getElementById('front-preview').style.display = 'none';
+            document.getElementById('side-preview').style.display = 'none';
+            document.getElementById('front-upload').classList.remove('has-image');
+            document.getElementById('side-upload').classList.remove('has-image');
+            document.getElementById('analysis-results').style.display = 'none';
+            document.getElementById('save-progress').style.display = 'none';
+            document.getElementById('analyze-btn').disabled = true;
+
+            document.getElementById('front-photo').value = '';
+            document.getElementById('side-photo').value = '';
+        }
+    }
+
+    // Initialize body tracker
+    document.addEventListener('DOMContentLoaded', () => {
+        new BodyTracker();
+    });
+</script>
+{% endblock %}

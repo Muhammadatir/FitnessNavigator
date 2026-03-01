@@ -1,0 +1,639 @@
+{% extends 'layout.html' %}
+
+{% block title %}Virtual Fitness Buddy - Fitness Navigator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Fitness Buddy Avatar -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h4 class="mb-0">🤖 Your Virtual Fitness Buddy</h4>
+                    <small>AI-powered personal trainer and motivator</small>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Avatar Section -->
+                    <div class="avatar-container mb-4">
+                        <div id="buddy-avatar" class="buddy-avatar">
+                            <div class="avatar-face">
+                                <div class="eyes">
+                                    <div class="eye left-eye"></div>
+                                    <div class="eye right-eye"></div>
+                                </div>
+                                <div class="mouth" id="buddy-mouth"></div>
+                            </div>
+                        </div>
+                        <div class="avatar-name mt-2">
+                            <h5 id="buddy-name">FitBot</h5>
+                            <small class="fitness-coach-text">Your AI Fitness Coach</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Interface -->
+                    <div class="chat-container">
+                        <div id="buddy-message" class="buddy-speech-bubble">
+                            <p id="message-text">Hey there! I'm your virtual fitness buddy. Ready to crush your goals today? 💪</p>
+                        </div>
+                        
+                        <!-- Quick Action Buttons -->
+                        <div class="quick-actions mt-3">
+                            <button class="btn btn-primary btn-sm" onclick="buddyChat('motivation')">💪 Motivate Me</button>
+                            <button class="btn btn-success btn-sm" onclick="buddyChat('workout')">🏋️ Workout Check</button>
+                            <button class="btn btn-info btn-sm" onclick="buddyChat('progress')">📊 My Progress</button>
+                            <button class="btn btn-warning btn-sm" onclick="buddyChat('tips')">💡 Fitness Tips</button>
+                        </div>
+                        
+                        <!-- Voice Controls -->
+                        <div class="voice-controls mt-3">
+                            <button id="voice-btn" class="btn btn-outline-primary">🎤 Talk to FitBot</button>
+                            <button id="mute-btn" class="btn btn-outline-secondary">🔇 Mute</button>
+                            <button id="test-voice" class="btn btn-outline-success">🔊 Test Voice</button>
+                        </div>
+                        
+                        <!-- Voice Status -->
+                        <div class="voice-status mt-2">
+                            <small id="voice-status" class="text-muted">Voice commands: Ready</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress & Stats -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">📈 Your Progress</h5>
+                </div>
+                <div class="card-body">
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Workout Streak:</span>
+                            <span class="stat-value" id="workout-streak">5 days</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Workouts:</span>
+                            <span class="stat-value" id="total-workouts">23</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Calories Burned:</span>
+                            <span class="stat-value" id="calories-burned">1,250</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Goal Progress:</span>
+                            <span class="stat-value" id="goal-progress">68%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress mt-3">
+                        <div class="progress-bar bg-success" style="width: 68%"></div>
+                    </div>
+                    <small class="text-muted">Weekly fitness goal</small>
+                </div>
+            </div>
+            
+            <!-- Mood Tracker -->
+            <div class="card mt-3">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">😊 How are you feeling?</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mood-selector">
+                        <button class="mood-btn" data-mood="energetic" onclick="setMood('energetic')">⚡ Energetic</button>
+                        <button class="mood-btn" data-mood="tired" onclick="setMood('tired')">😴 Tired</button>
+                        <button class="mood-btn" data-mood="motivated" onclick="setMood('motivated')">🔥 Motivated</button>
+                        <button class="mood-btn" data-mood="stressed" onclick="setMood('stressed')">😰 Stressed</button>
+                    </div>
+                    <div id="mood-response" class="mt-2 text-center">
+                        <small class="text-muted">Select your mood for personalized advice</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Daily Challenges -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">🎯 Today's Challenge</h6>
+                </div>
+                <div class="card-body">
+                    <div id="daily-challenge">
+                        <p class="mb-2"><strong>Push-up Challenge</strong></p>
+                        <p class="small">Complete 50 push-ups today (can be broken into sets)</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 40%"></div>
+                        </div>
+                        <small>20/50 completed</small>
+                        <button class="btn btn-sm btn-success mt-2 w-100" onclick="updateChallenge()">✅ Mark Progress</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.buddy-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounce 2s infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-face {
+    position: relative;
+}
+
+.eyes {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.eye {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+}
+
+.eye::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #333;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    animation: blink 3s infinite;
+}
+
+.mouth {
+    width: 20px;
+    height: 10px;
+    border: 2px solid white;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+}
+
+.buddy-speech-bubble {
+    background: #f8f9fa;
+    border: 2px solid #007bff;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px 0;
+    position: relative;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.buddy-speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #007bff;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: #212529;
+}
+
+.mood-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mood-btn {
+    padding: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9em;
+    color: #212529 !important;
+}
+
+.mood-btn:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+}
+
+.mood-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+@keyframes blink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.speaking {
+    animation: pulse 0.5s infinite alternate;
+}
+
+.fitness-coach-text {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+}
+
+#buddy-name {
+    color: #ffffff !important;
+}
+
+.card-body {
+    color: #ffffff !important;
+}
+
+.card-body h5, .card-body h6, .card-body p, .card-body small {
+    color: #ffffff !important;
+}
+
+.stat-value {
+    color: #ffffff !important;
+}
+
+.card-header {
+    color: #ffffff !important;
+}
+
+.buddy-speech-bubble {
+    color: #212529 !important;
+}
+
+#message-text {
+    color: #212529 !important;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+.voice-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.voice-controls .btn {
+    min-width: 120px;
+    font-size: 0.9rem;
+}
+
+.voice-status {
+    text-align: center;
+    padding: 5px;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#voice-btn.listening {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+    animation: pulse 1s infinite;
+}
+
+.voice-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: #007bff;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    z-index: 1000;
+    animation: pulse 1s infinite;
+}
+
+.voice-indicator.active {
+    display: flex;
+}
+</style>
+
+<script>
+class FitnessBuddy {
+    constructor() {
+        this.userName = localStorage.getItem('userName') || 'Friend';
+        this.currentMood = null;
+        this.voiceEnabled = true;
+        this.responses = {
+            motivation: [
+                `Hey ${this.userName}! You're stronger than you think! 💪`,
+                `${this.userName}, every workout counts! You've got this! 🔥`,
+                `Remember ${this.userName}, champions are made in the gym! Keep pushing! ⚡`,
+                `${this.userName}, your future self will thank you for today's effort! 🌟`
+            ],
+            workout: [
+                `${this.userName}, have you completed today's workout? Your body is waiting! 🏋️`,
+                `Time to move, ${this.userName}! Even 10 minutes makes a difference! 💪`,
+                `${this.userName}, consistency beats perfection. Let's get moving! 🚀`,
+                `Your muscles are calling, ${this.userName}! Answer them! 💥`
+            ],
+            progress: [
+                `${this.userName}, you're 68% towards your weekly goal! Amazing progress! 📊`,
+                `Look at you go, ${this.userName}! 23 workouts completed this month! 🎉`,
+                `${this.userName}, your 5-day streak is impressive! Keep it rolling! 🔥`,
+                `You've burned 1,250 calories this week, ${this.userName}! Fantastic! ⚡`
+            ],
+            tips: [
+                `${this.userName}, drink water before, during, and after workouts! 💧`,
+                `Pro tip, ${this.userName}: Warm up for 5 minutes to prevent injuries! 🔥`,
+                `${this.userName}, get 7-9 hours of sleep for optimal recovery! 😴`,
+                `Remember ${this.userName}, protein within 30 minutes post-workout! 🥤`
+            ]
+        };
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupVoiceRecognition();
+        this.setupEventListeners();
+        this.greetUser();
+        this.updateUserName();
+    }
+    
+    setupEventListeners() {
+        document.getElementById('voice-btn').addEventListener('click', () => this.startListening());
+        document.getElementById('mute-btn').addEventListener('click', () => this.toggleMute());
+        document.getElementById('test-voice').addEventListener('click', () => this.testVoice());
+    }
+    
+    greetUser() {
+        const hour = new Date().getHours();
+        let greeting = '';
+        
+        if (hour < 12) {
+            greeting = `Good morning, ${this.userName}! Ready to start your day strong? 🌅`;
+        } else if (hour < 17) {
+            greeting = `Good afternoon, ${this.userName}! Time for some energy-boosting exercise? ⚡`;
+        } else {
+            greeting = `Good evening, ${this.userName}! How about a relaxing workout to end the day? 🌙`;
+        }
+        
+        this.speak(greeting);
+    }
+    
+    updateUserName() {
+        if (!localStorage.getItem('userName')) {
+            const name = prompt('What should I call you?') || 'Friend';
+            localStorage.setItem('userName', name);
+            this.userName = name;
+        }
+    }
+    
+    speak(message) {
+        document.getElementById('message-text').textContent = message;
+        document.getElementById('buddy-avatar').classList.add('speaking');
+        
+        if (this.voiceEnabled && 'speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            utterance.onend = () => {
+                document.getElementById('buddy-avatar').classList.remove('speaking');
+            };
+            speechSynthesis.speak(utterance);
+        } else {
+            setTimeout(() => {
+                document.getElementById('buddy-avatar').classList.remove('speaking');
+            }, 2000);
+        }
+    }
+    
+    setupVoiceRecognition() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            this.recognition.continuous = false;
+            this.recognition.interimResults = false;
+            this.recognition.lang = 'en-US';
+            
+            this.recognition.onresult = (event) => {
+                const command = event.results[0][0].transcript.toLowerCase();
+                console.log('Voice command received:', command);
+                this.processVoiceCommand(command);
+            };
+            
+            this.recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                this.resetVoiceButton();
+                
+                if (event.error === 'not-allowed') {
+                    this.speak("Please allow microphone access to use voice commands.");
+                    this.updateVoiceStatus('Microphone access denied');
+                } else if (event.error === 'no-speech') {
+                    this.speak("I didn't hear anything. Please try again.");
+                    this.updateVoiceStatus('No speech detected');
+                } else {
+                    this.speak("Sorry, I didn't catch that. Try again!");
+                    this.updateVoiceStatus('Recognition error');
+                }
+            };
+            
+            this.recognition.onend = () => {
+                this.resetVoiceButton();
+                this.updateVoiceStatus('Ready for voice commands');
+            };
+            
+            this.recognition.onstart = () => {
+                this.updateVoiceStatus('Listening... Speak now!');
+            };
+        } else {
+            console.warn('Speech recognition not supported in this browser');
+        }
+    }
+    
+    startListening() {
+        if (this.recognition) {
+            try {
+                const voiceBtn = document.getElementById('voice-btn');
+                voiceBtn.textContent = '🔴 Listening...';
+                voiceBtn.classList.add('listening');
+                this.updateVoiceStatus('Listening for your command...');
+                
+                this.recognition.start();
+                
+                // Auto-stop after 5 seconds if no result
+                setTimeout(() => {
+                    if (this.recognition) {
+                        this.recognition.stop();
+                    }
+                }, 5000);
+            } catch (error) {
+                console.error('Error starting speech recognition:', error);
+                this.speak('Error starting voice recognition. Please try again.');
+                this.resetVoiceButton();
+                this.updateVoiceStatus('Error - Please try again');
+            }
+        } else {
+            this.speak('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+            this.updateVoiceStatus('Voice recognition not supported');
+        }
+    }
+    
+    resetVoiceButton() {
+        const voiceBtn = document.getElementById('voice-btn');
+        voiceBtn.textContent = '🎤 Talk to FitBot';
+        voiceBtn.classList.remove('listening');
+    }
+    
+    processVoiceCommand(command) {
+        this.updateVoiceStatus(`Processing: "${command}"`);
+        
+        // Clean up the command
+        const cleanCommand = command.toLowerCase().trim();
+        
+        if (cleanCommand.includes('motivate') || cleanCommand.includes('motivation')) {
+            this.buddyChat('motivation');
+        } else if (cleanCommand.includes('workout') || cleanCommand.includes('exercise')) {
+            this.buddyChat('workout');
+        } else if (cleanCommand.includes('progress') || cleanCommand.includes('stats')) {
+            this.buddyChat('progress');
+        } else if (cleanCommand.includes('tip') || cleanCommand.includes('advice') || cleanCommand.includes('help')) {
+            this.buddyChat('tips');
+        } else if (cleanCommand.includes('hello') || cleanCommand.includes('hi')) {
+            this.speak(`Hello ${this.userName}! I'm here to help with your fitness journey. What can I do for you today?`);
+        } else if (cleanCommand.includes('time') || cleanCommand.includes('what time')) {
+            const now = new Date();
+            this.speak(`It's ${now.toLocaleTimeString()}. Perfect time for some fitness activity!`);
+        } else if (cleanCommand.includes('weather')) {
+            this.speak('I can\'t check the weather, but any weather is good weather for indoor workouts!');
+        } else if (cleanCommand.includes('thank you') || cleanCommand.includes('thanks')) {
+            this.speak('You\'re welcome! I\'m always here to support your fitness goals!');
+        } else if (cleanCommand.length > 2) {
+            this.speak(`I heard "${command}". Try saying: motivate me, workout check, my progress, or fitness tips. You can also say hello or ask for help!`);
+        } else {
+            this.speak('I didn\'t catch that clearly. Please try again or click the test voice button first.');
+        }
+        
+        setTimeout(() => {
+            this.updateVoiceStatus('Ready for voice commands');
+        }, 3000);
+    }
+    
+    buddyChat(type) {
+        const responses = this.responses[type];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        this.speak(randomResponse);
+    }
+    
+    toggleMute() {
+        this.voiceEnabled = !this.voiceEnabled;
+        const btn = document.getElementById('mute-btn');
+        btn.textContent = this.voiceEnabled ? '🔇 Mute' : '🔊 Unmute';
+        
+        if (!this.voiceEnabled) {
+            speechSynthesis.cancel();
+        }
+        
+        this.updateVoiceStatus(this.voiceEnabled ? 'Voice enabled' : 'Voice muted');
+    }
+    
+    testVoice() {
+        this.speak('Voice test successful! I can hear you and speak to you. Try clicking the microphone button and say something like: motivate me, workout check, or fitness tips.');
+        this.updateVoiceStatus('Voice test completed');
+    }
+    
+    updateVoiceStatus(message) {
+        const statusEl = document.getElementById('voice-status');
+        if (statusEl) {
+            statusEl.textContent = `Voice commands: ${message}`;
+        }
+    }
+}
+
+// Mood and challenge functions
+function setMood(mood) {
+    // Remove active class from all buttons
+    document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
+    // Add active class to selected button
+    document.querySelector(`[data-mood="${mood}"]`).classList.add('active');
+    
+    const responses = {
+        energetic: "Awesome! Let's channel that energy into a high-intensity workout! 🔥",
+        tired: "I understand. How about some gentle stretching or a short walk? 🚶‍♀️",
+        motivated: "Perfect! This is the best time to push your limits! 💪",
+        stressed: "Let's do some calming yoga or meditation to help you relax 🧘‍♀️"
+    };
+    
+    document.getElementById('mood-response').innerHTML = 
+        `<small class="text-success">${responses[mood]}</small>`;
+    
+    // Update buddy response based on mood
+    window.fitnessBuddy.speak(responses[mood]);
+}
+
+function updateChallenge() {
+    const progress = Math.min(parseInt(document.querySelector('#daily-challenge .progress-bar').style.width) + 20, 100);
+    document.querySelector('#daily-challenge .progress-bar').style.width = progress + '%';
+    
+    const completed = Math.floor((progress / 100) * 50);
+    document.querySelector('#daily-challenge small').textContent = `${completed}/50 completed`;
+    
+    if (progress >= 100) {
+        window.fitnessBuddy.speak("🎉 Challenge completed! You're on fire today!");
+        document.querySelector('#daily-challenge button').textContent = '🏆 Completed!';
+        document.querySelector('#daily-challenge button').disabled = true;
+    } else {
+        window.fitnessBuddy.speak(`Great job! ${completed} push-ups done. Keep going!`);
+    }
+}
+
+// Global functions for buttons
+function buddyChat(type) {
+    window.fitnessBuddy.buddyChat(type);
+}
+
+// Initialize fitness buddy
+document.addEventListener('DOMContentLoaded', () => {
+    window.fitnessBuddy = new FitnessBuddy();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,603 @@
+{% extends 'layout.html' %}
+
+{% block title %}AI Meal Scanner - Fitness Navigator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">📸 AI Meal Photo Recognition</h4>
+                    <small>Take a photo of your meal for instant nutrition analysis</small>
+                </div>
+                <div class="card-body">
+                    <!-- Camera Section -->
+                    <div class="camera-section mb-4">
+                        <div id="camera-container" class="text-center">
+                            <video id="camera" width="100%" height="300" autoplay style="border-radius: 8px; background: #000;"></video>
+                            <canvas id="canvas" style="display: none;"></canvas>
+                        </div>
+                        
+                        <div class="camera-controls mt-3 text-center">
+                            <button id="start-camera" class="btn btn-success btn-lg">📷 Start Camera</button>
+                            <button id="capture-photo" class="btn btn-primary btn-lg" style="display: none;">📸 Capture Meal</button>
+                            <button id="stop-camera" class="btn btn-secondary" style="display: none;">⏹️ Stop</button>
+                            <div class="mt-2">
+                                <small class="text-muted">📱 Camera requires HTTPS or localhost</small>
+                            </div>
+                        </div>
+                        
+                        <!-- File Upload Alternative -->
+                        <div class="upload-section mt-3">
+                            <div class="text-center">
+                                <p class="text-muted">Or upload a photo from your device:</p>
+                                <input type="file" id="meal-upload" accept="image/*" class="form-control" style="max-width: 300px; margin: 0 auto;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Results -->
+                    <div id="analysis-results" style="display: none;">
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">🤖 AI Analysis Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img id="analyzed-image" src="" alt="Analyzed Meal" class="img-fluid rounded mb-3">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div id="nutrition-info">
+                                            <h6>Detected Food Items:</h6>
+                                            <ul id="food-items" class="list-unstyled"></ul>
+                                            <small id="analysis-source" class="text-muted"></small>
+                                            
+                                            <h6 class="mt-3">Nutrition Estimate:</h6>
+                                            <div class="nutrition-grid">
+                                                <div class="nutrition-item">
+                                                    <span class="label">Calories:</span>
+                                                    <span id="calories" class="value">0</span>
+                                                </div>
+                                                <div class="nutrition-item">
+                                                    <span class="label">Protein:</span>
+                                                    <span id="protein" class="value">0g</span>
+                                                </div>
+                                                <div class="nutrition-item">
+                                                    <span class="label">Carbs:</span>
+                                                    <span id="carbs" class="value">0g</span>
+                                                </div>
+                                                <div class="nutrition-item">
+                                                    <span class="label">Fat:</span>
+                                                    <span id="fat" class="value">0g</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Health Analysis -->
+                                <div class="health-analysis mt-4">
+                                    <h6>🎯 Health Analysis for Your Goals:</h6>
+                                    <div id="health-verdict" class="alert alert-info">
+                                        <p id="verdict-text">Analyzing meal healthiness...</p>
+                                        <div id="recommendations"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-3">
+                                    <button id="scan-another" class="btn btn-primary">📸 Scan Another Meal</button>
+                                    <button id="save-meal" class="btn btn-success">💾 Save to Food Log</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Food Log Sidebar -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📊 Today's Food Log</h5>
+                </div>
+                <div class="card-body">
+                    <div id="daily-summary">
+                        <div class="summary-item">
+                            <span>Total Calories:</span>
+                            <span id="daily-calories">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Protein:</span>
+                            <span id="daily-protein">0g</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Carbs:</span>
+                            <span id="daily-carbs">0g</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Fat:</span>
+                            <span id="daily-fat">0g</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress mt-3">
+                        <div id="calorie-progress" class="progress-bar bg-success" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted">Daily calorie goal progress</small>
+                    
+                    <div id="meal-history" class="mt-4">
+                        <h6>Recent Meals:</h6>
+                        <div id="meal-list">
+                            <p class="text-muted">No meals logged today</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Tips -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">💡 Photo Tips</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li>📱 Hold phone steady</li>
+                        <li>💡 Good lighting helps</li>
+                        <li>🍽️ Show entire plate</li>
+                        <li>📏 Include size reference</li>
+                        <li>🔍 Clear, focused image</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.nutrition-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.nutrition-item .label {
+    font-weight: bold;
+}
+
+.nutrition-item .value {
+    color: #212529;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.meal-entry {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+#camera {
+    max-width: 100%;
+    border: 2px solid #ddd;
+}
+</style>
+
+<script>
+class MealScanner {
+    constructor() {
+        this.camera = document.getElementById('camera');
+        this.canvas = document.getElementById('canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.stream = null;
+        this.dailyLog = JSON.parse(localStorage.getItem('dailyMealLog') || '[]');
+        
+        this.init();
+        this.updateDailySummary();
+    }
+    
+    init() {
+        document.getElementById('start-camera').addEventListener('click', () => this.startCamera());
+        document.getElementById('capture-photo').addEventListener('click', () => this.capturePhoto());
+        document.getElementById('stop-camera').addEventListener('click', () => this.stopCamera());
+        document.getElementById('meal-upload').addEventListener('change', (e) => this.handleFileUpload(e));
+        document.getElementById('scan-another').addEventListener('click', () => this.resetScanner());
+        document.getElementById('save-meal').addEventListener('click', () => this.saveMeal());
+    }
+    
+    async startCamera() {
+        try {
+            // Request camera with optimized constraints for food photography
+            const constraints = {
+                video: {
+                    width: { ideal: 1280, min: 640 },
+                    height: { ideal: 720, min: 480 },
+                    facingMode: 'environment', // Use back camera on mobile
+                    focusMode: 'continuous',
+                    whiteBalanceMode: 'continuous'
+                }
+            };
+            
+            this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+            this.camera.srcObject = this.stream;
+            
+            // Wait for video to load
+            this.camera.onloadedmetadata = () => {
+                this.camera.play();
+            };
+            
+            document.getElementById('start-camera').style.display = 'none';
+            document.getElementById('capture-photo').style.display = 'inline-block';
+            document.getElementById('stop-camera').style.display = 'inline-block';
+            
+        } catch (error) {
+            console.error('Camera error:', error);
+            let errorMsg = 'Camera access failed. ';
+            
+            if (error.name === 'NotAllowedError') {
+                errorMsg += 'Please allow camera permission and try again.';
+            } else if (error.name === 'NotFoundError') {
+                errorMsg += 'No camera found on this device.';
+            } else {
+                errorMsg += 'Please use file upload instead.';
+            }
+            
+            alert(errorMsg);
+        }
+    }
+    
+    capturePhoto() {
+        // Set canvas size to match video
+        this.canvas.width = this.camera.videoWidth;
+        this.canvas.height = this.camera.videoHeight;
+        
+        // Draw the current frame
+        this.ctx.drawImage(this.camera, 0, 0);
+        
+        // Convert to high-quality JPEG
+        const imageData = this.canvas.toDataURL('image/jpeg', 0.9);
+        
+        console.log('Photo captured, starting analysis...');
+        this.analyzeMeal(imageData);
+        this.stopCamera();
+    }
+    
+    stopCamera() {
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
+        
+        document.getElementById('start-camera').style.display = 'inline-block';
+        document.getElementById('capture-photo').style.display = 'none';
+        document.getElementById('stop-camera').style.display = 'none';
+    }
+    
+    handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.analyzeMeal(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    async analyzeMeal(imageData) {
+        // Show the analyzed image
+        document.getElementById('analyzed-image').src = imageData;
+        
+        // Show loading
+        document.getElementById('analysis-results').style.display = 'block';
+        document.getElementById('food-items').innerHTML = '<li>🤖 Analyzing image...</li>';
+        
+        // Show loading state
+        document.getElementById('food-items').innerHTML = '<li>🤖 Analyzing with Gemini AI...</li>';
+        
+        try {
+            console.log('=== STARTING REAL AI ANALYSIS ===');
+            console.log('Image data length:', imageData.length);
+            
+            const analysis = await this.callFoodAI(imageData);
+            
+            console.log('=== AI ANALYSIS SUCCESS ===');
+            console.log('Analysis result:', analysis);
+            
+            // Check if this is real AI or fallback
+            if (analysis.source && analysis.source.includes('Fallback')) {
+                console.error('WARNING: Got fallback data instead of real AI!');
+                document.getElementById('food-items').innerHTML = 
+                    '<li class="text-warning">⚠️ AI analysis failed - showing fallback data</li>';
+            }
+            
+            this.displayResults(analysis);
+            
+        } catch (error) {
+            console.error('=== AI ANALYSIS FAILED ===');
+            console.error('Error details:', error);
+            
+            // Show the actual error to user
+            document.getElementById('food-items').innerHTML = 
+                `<li class="text-danger">❌ AI Error: ${error.message}</li>
+                 <li class="text-info">Please check console for details</li>`;
+            
+            // Don't show fallback - let user know AI failed
+            document.getElementById('analysis-results').style.display = 'block';
+        }
+    }
+    
+    async callFoodAI(imageData) {
+        try {
+            console.log('Making API call to /analyze_food...');
+            console.log('Request payload size:', JSON.stringify({image: imageData}).length);
+            
+            // Call our backend API that uses Gemini AI
+            const response = await fetch('/analyze_food', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    image: imageData
+                })
+            });
+            
+            console.log('API Response status:', response.status);
+            console.log('API Response headers:', response.headers);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                console.error('Full response object:', response);
+                throw new Error(`Backend API failed (${response.status}): ${errorText}`);
+            }
+            
+            const result = await response.json();
+            console.log('API Result:', result);
+            
+            if (!result.success) {
+                throw new Error(result.error || 'Analysis failed');
+            }
+            
+            return {
+                foods: result.foods,
+                nutrition: result.nutrition,
+                source: result.source
+            };
+            
+        } catch (error) {
+            console.error('callFoodAI error:', error);
+            throw error;
+        }
+    }
+    
+
+    
+    calculateNutritionFromFoods(foods) {
+        // Nutrition database (simplified)
+        const nutritionDB = {
+            'chicken': { calories: 165, protein: 31, carbs: 0, fat: 3.6 },
+            'rice': { calories: 130, protein: 2.7, carbs: 28, fat: 0.3 },
+            'broccoli': { calories: 25, protein: 3, carbs: 5, fat: 0.3 },
+            'salad': { calories: 20, protein: 1, carbs: 4, fat: 0.2 },
+            'bread': { calories: 80, protein: 4, carbs: 15, fat: 1 },
+            'egg': { calories: 70, protein: 6, carbs: 0.5, fat: 5 },
+            'fish': { calories: 140, protein: 25, carbs: 0, fat: 5 },
+            'pasta': { calories: 220, protein: 8, carbs: 44, fat: 1 },
+            'potato': { calories: 160, protein: 4, carbs: 37, fat: 0.2 }
+        };
+        
+        let totalNutrition = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+        
+        foods.forEach(food => {
+            const foodName = food.name.toLowerCase();
+            const confidence = food.confidence / 100;
+            
+            // Find matching nutrition data
+            for (let key in nutritionDB) {
+                if (foodName.includes(key)) {
+                    const nutrition = nutritionDB[key];
+                    totalNutrition.calories += nutrition.calories * confidence;
+                    totalNutrition.protein += nutrition.protein * confidence;
+                    totalNutrition.carbs += nutrition.carbs * confidence;
+                    totalNutrition.fat += nutrition.fat * confidence;
+                    break;
+                }
+            }
+        });
+        
+        // Round values
+        Object.keys(totalNutrition).forEach(key => {
+            totalNutrition[key] = Math.round(totalNutrition[key]);
+        });
+        
+        return totalNutrition;
+    }
+    
+    enhancedFoodAnalysis(imageData) {
+        // Enhanced simulation based on image analysis patterns
+        const commonMeals = [
+            {
+                foods: [
+                    { name: 'Grilled Chicken Breast', confidence: 94 },
+                    { name: 'Brown Rice', confidence: 89 },
+                    { name: 'Steamed Vegetables', confidence: 91 }
+                ],
+                nutrition: { calories: 420, protein: 35, carbs: 38, fat: 8 }
+            },
+            {
+                foods: [
+                    { name: 'Salmon Fillet', confidence: 92 },
+                    { name: 'Quinoa', confidence: 87 },
+                    { name: 'Green Salad', confidence: 95 }
+                ],
+                nutrition: { calories: 380, protein: 28, carbs: 32, fat: 12 }
+            },
+            {
+                foods: [
+                    { name: 'Pasta', confidence: 96 },
+                    { name: 'Tomato Sauce', confidence: 88 },
+                    { name: 'Parmesan Cheese', confidence: 85 }
+                ],
+                nutrition: { calories: 520, protein: 18, carbs: 68, fat: 16 }
+            }
+        ];
+        
+        // Return random realistic meal
+        return commonMeals[Math.floor(Math.random() * commonMeals.length)];
+    }
+    
+    displayResults(analysis) {
+        // Display detected foods
+        const foodList = document.getElementById('food-items');
+        foodList.innerHTML = '';
+        analysis.foods.forEach(food => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="badge bg-primary me-2">${food.confidence}%</span>${food.name}`;
+            foodList.appendChild(li);
+        });
+        
+        // Display nutrition
+        document.getElementById('calories').textContent = analysis.nutrition.calories;
+        document.getElementById('protein').textContent = analysis.nutrition.protein + 'g';
+        document.getElementById('carbs').textContent = analysis.nutrition.carbs + 'g';
+        document.getElementById('fat').textContent = analysis.nutrition.fat + 'g';
+        
+        // Show analysis source
+        document.getElementById('analysis-source').textContent = 
+            `Analyzed by: ${analysis.source || 'AI System'}`;
+        
+        // Health analysis
+        this.analyzeHealthiness(analysis.nutrition);
+        
+        // Store current analysis
+        this.currentAnalysis = analysis;
+    }
+    
+    analyzeHealthiness(nutrition) {
+        const verdictEl = document.getElementById('health-verdict');
+        const textEl = document.getElementById('verdict-text');
+        const recEl = document.getElementById('recommendations');
+        
+        // Simple health analysis
+        let verdict = '';
+        let recommendations = [];
+        let alertClass = 'alert-success';
+        
+        if (nutrition.calories > 600) {
+            verdict = '⚠️ High calorie meal - consider portion control';
+            alertClass = 'alert-warning';
+            recommendations.push('Try eating half now, save rest for later');
+        } else if (nutrition.calories < 200) {
+            verdict = '📉 Low calorie meal - might need more fuel';
+            alertClass = 'alert-info';
+            recommendations.push('Add healthy fats like nuts or avocado');
+        } else {
+            verdict = '✅ Well-balanced meal for your goals!';
+            alertClass = 'alert-success';
+        }
+        
+        if (nutrition.protein < 20) {
+            recommendations.push('Add more protein (chicken, fish, beans)');
+        }
+        
+        if (nutrition.carbs > 50) {
+            recommendations.push('Consider reducing carbs if weight loss is your goal');
+        }
+        
+        verdictEl.className = `alert ${alertClass}`;
+        textEl.textContent = verdict;
+        
+        if (recommendations.length > 0) {
+            recEl.innerHTML = '<strong>Recommendations:</strong><ul>' + 
+                recommendations.map(r => `<li>${r}</li>`).join('') + '</ul>';
+        } else {
+            recEl.innerHTML = '<strong>Perfect! Keep up the good work! 🎉</strong>';
+        }
+    }
+    
+    saveMeal() {
+        if (this.currentAnalysis) {
+            const meal = {
+                timestamp: new Date().toLocaleTimeString(),
+                foods: this.currentAnalysis.foods,
+                nutrition: this.currentAnalysis.nutrition
+            };
+            
+            this.dailyLog.push(meal);
+            localStorage.setItem('dailyMealLog', JSON.stringify(this.dailyLog));
+            
+            this.updateDailySummary();
+            this.updateMealHistory();
+            
+            alert('Meal saved to your food log! 📊');
+        }
+    }
+    
+    updateDailySummary() {
+        const totals = this.dailyLog.reduce((sum, meal) => {
+            sum.calories += meal.nutrition.calories;
+            sum.protein += meal.nutrition.protein;
+            sum.carbs += meal.nutrition.carbs;
+            sum.fat += meal.nutrition.fat;
+            return sum;
+        }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+        
+        document.getElementById('daily-calories').textContent = totals.calories;
+        document.getElementById('daily-protein').textContent = totals.protein + 'g';
+        document.getElementById('daily-carbs').textContent = totals.carbs + 'g';
+        document.getElementById('daily-fat').textContent = totals.fat + 'g';
+        
+        // Update progress bar (assuming 2000 calorie goal)
+        const progress = Math.min((totals.calories / 2000) * 100, 100);
+        document.getElementById('calorie-progress').style.width = progress + '%';
+    }
+    
+    updateMealHistory() {
+        const historyEl = document.getElementById('meal-list');
+        if (this.dailyLog.length === 0) {
+            historyEl.innerHTML = '<p class="text-muted">No meals logged today</p>';
+            return;
+        }
+        
+        historyEl.innerHTML = this.dailyLog.slice(-5).reverse().map(meal => 
+            `<div class="meal-entry">
+                <strong>${meal.timestamp}</strong><br>
+                <small>${meal.nutrition.calories} cal, ${meal.nutrition.protein}g protein</small>
+            </div>`
+        ).join('');
+    }
+    
+    resetScanner() {
+        document.getElementById('analysis-results').style.display = 'none';
+        document.getElementById('meal-upload').value = '';
+        this.currentAnalysis = null;
+    }
+}
+
+// Initialize meal scanner
+document.addEventListener('DOMContentLoaded', () => {
+    new MealScanner();
+});
+</script>
+{% endblock %}

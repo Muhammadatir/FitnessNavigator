@@ -1,0 +1,322 @@
+{% extends 'layout.html' %}
+
+{% block title %}The Web Workout - Personalized Fitness & Diet Plans{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url({{ 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'|safe }}) no-repeat center center; background-size: cover;">
+    <div class="container">
+        <div class="hero-text fade-in">
+            <h1>Your Personalized Journey to Fitness</h1>
+            <p class="lead mb-4">AI-powered fitness coaching, meal scanning, and progress tracking all in one place</p>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg me-3">🚀 Launch Dashboard</a>
+            <a href="#user-form" class="btn btn-outline-light btn-lg">Quick Start</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="text-center section-title features-heading" style="color: white !important; font-weight: 600 !important;">Why Choose SmartFit?</h2>
+        <div class="row mt-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-box fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Personalized Diet Plans</h3>
+                    <p>Customized weekly diet plans based on your gender, food preferences, and nutritional needs.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-box fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3>Tailored Workout Routines</h3>
+                    <p>Gender-specific workout plans with three intensity levels to match your fitness journey.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-box fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-weight"></i>
+                    </div>
+                    <h3>BMI Calculation</h3>
+                    <p>Understand your Body Mass Index and get recommendations suited to your body type.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-box fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-carrot"></i>
+                    </div>
+                    <h3>Vegetarian & Non-Veg Options</h3>
+                    <p>Specialized meal plans for both vegetarian and non-vegetarian preferences.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-box fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Weekly & Monthly Plans</h3>
+                    <p>Diet plans organized by week and workout routines planned for a full month.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-box fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile-Friendly Design</h3>
+                    <p>Access your fitness plans on any device with our responsive design.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- User Form Section -->
+<section class="form-section" id="user-form">
+    <div class="container">
+        <h2 class="text-center section-title" style="color: white !important; font-weight: 600 !important;">Generate Your Personalized Plan</h2>
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="card form-card zoom-in">
+                    <div class="card-body p-4">
+                        <form id="user-form" action="{{ url_for('generate_plan') }}" method="post" class="needs-validation" novalidate>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="age" class="form-label">Age</label>
+                                    <input type="number" class="form-control" id="age" name="age" min="15" max="80" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid age (15-80).
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="">Choose...</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select your gender.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="height" class="form-label">Height (in cm)</label>
+                                    <input type="number" step="0.1" class="form-control" id="height" name="height" min="120" max="220" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid height (120-220 cm).
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="weight" class="form-label">Weight (in kg)</label>
+                                    <input type="number" step="0.1" class="form-control" id="weight" name="weight" min="30" max="200" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid weight (30-200 kg).
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="food_preference" class="form-label">Food Preference</label>
+                                    <select class="form-select" id="food_preference" name="food_preference" required>
+                                        <option value="">Choose...</option>
+                                        <option value="veg">Vegetarian</option>
+                                        <option value="non-veg">Non-Vegetarian</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select your food preference.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="intensity" class="form-label">Workout Intensity</label>
+                                    <select class="form-select" id="intensity" name="intensity" required>
+                                        <option value="">Choose...</option>
+                                        <option value="easy">Easy</option>
+                                        <option value="intermediate">Intermediate</option>
+                                        <option value="hardcore">Hardcore</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select your preferred workout intensity.
+                                    </div>
+                                </div>
+                                <!-- Add this inside your form -->
+                                <div class="mb-3">
+                                    <label for="health_problem" class="form-label">Health Problem (if any)</label>
+                                    <select class="form-select" id="health_problem" name="health_problem">
+                                        <option value="">None</option>
+                                        <option value="heart">Heart Ailments</option>
+                                        <option value="osteoarthritis">Osteoarthritis</option>
+                                        <option value="asthma">Asthma</option>
+                                        <option value="obesity">Obesity</option>
+                                        <option value="diabetes">Diabetes</option>
+                                        <option value="mental">Mental Health</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button class="btn btn-primary btn-lg w-100" type="submit">Generate My Plans</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick BMI Calculator -->
+<section class="bmi-section">
+    <div class="container">
+        <h2 class="text-center section-title">Quick BMI Calculator</h2>
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-6">
+                <div class="card form-card zoom-in">
+                    <div class="card-body p-4">
+                        <div id="bmi-calculator">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="height-bmi" class="form-label">Height (in cm)</label>
+                                    <input type="number" step="0.1" class="form-control" id="height-bmi" min="120" max="220">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="weight-bmi" class="form-label">Weight (in kg)</label>
+                                    <input type="number" step="0.1" class="form-control" id="weight-bmi" min="30" max="200">
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <button class="btn btn-primary w-100" id="calculate-bmi" type="button">Calculate BMI</button>
+                                </div>
+                            </div>
+                            <div id="bmi-result" class="mt-4 p-3 rounded text-center" style="display: none;">
+                                <h4>Your BMI: <span id="bmi-value">0.0</span></h4>
+                                <p>Category: <span id="bmi-category">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Stories Section -->
+<section class="success-stories-section">
+    <div class="container">
+        <h2 class="text-center section-title">Success Stories</h2>
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="card form-card zoom-in">
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-text">
+                                        <p>The personalized diet plan changed my relationship with food. I've lost 15kg in 3 months while eating foods I enjoy!</p>
+                                    </div>
+                                    <div class="client-info">
+                                        <img src="{{ 'https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'|safe }}" alt="Sarah J." class="rounded-circle me-3">
+                                        <div>
+                                            <h5 class="mb-0">Sarah J.</h5>
+                                            <small>Lost 15kg in 3 months</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-text">
+                                        <p>As a vegetarian, I struggled to build muscle. The custom plan gave me protein-rich meals that helped me gain lean muscle mass.</p>
+                                    </div>
+                                    <div class="client-info">
+                                        <img src="{{ 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'|safe }}" alt="Mark T." class="rounded-circle me-3">
+                                        <div>
+                                            <h5 class="mb-0">Mark T.</h5>
+                                            <small>Gained 8kg of muscle</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-text">
+                                        <p>The workout plan was perfect for my busy schedule. I started with the easy intensity and worked my way up. I feel stronger than ever!</p>
+                                    </div>
+                                    <div class="client-info">
+                                        <img src="{{ 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'|safe }}" alt="Lisa M." class="rounded-circle me-3">
+                                        <div>
+                                            <h5 class="mb-0">Lisa M.</h5>
+                                            <small>Improved strength & energy</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/bmi.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fix for the BMI calculator (use the right IDs)
+        document.getElementById('calculate-bmi').addEventListener('click', function() {
+            const height = parseFloat(document.getElementById('height-bmi').value);
+            const weight = parseFloat(document.getElementById('weight-bmi').value);
+            
+            if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0 || height < 120 || height > 220 || weight < 30 || weight > 200) {
+                document.getElementById('bmi-result').innerHTML = '<h4 style="color: #dc3545;">Invalid Input</h4><p style="color: #dc3545;">Please enter valid height (120-220 cm) and weight (30-200 kg)</p>';
+                document.getElementById('bmi-result').style.display = 'block';
+                document.getElementById('bmi-result').className = 'mt-4 p-3 rounded text-center';
+                return;
+            }
+            
+            // Convert height from cm to m
+            const heightInMeters = height / 100;
+            
+            // Calculate BMI
+            const bmi = weight / (heightInMeters * heightInMeters);
+            const roundedBmi = bmi.toFixed(1);
+            
+            // Determine BMI category
+            let category = '';
+            let categoryClass = '';
+            
+            if (bmi < 18.5) {
+                category = 'Underweight';
+                categoryClass = 'bmi-underweight';
+            } else if (bmi < 25) {
+                category = 'Normal weight';
+                categoryClass = 'bmi-normal';
+            } else if (bmi < 30) {
+                category = 'Overweight';
+                categoryClass = 'bmi-overweight';
+            } else {
+                category = 'Obese';
+                categoryClass = 'bmi-obese';
+            }
+            
+            // Display the result
+            document.getElementById('bmi-value').textContent = roundedBmi;
+            document.getElementById('bmi-category').textContent = category;
+            
+            // Clear existing classes and add the appropriate one
+            const resultElement = document.getElementById('bmi-result');
+            resultElement.className = 'mt-4 p-3 rounded text-center ' + categoryClass;
+            
+            // Show the result
+            resultElement.style.display = 'block';
+        });
+    });
+</script>
+{% endblock %}
+<a href="{{ url_for('generate_plan') }}">AI Plan Generator</a>

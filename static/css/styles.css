@@ -1,0 +1,1271 @@
+/* Custom styles in addition to Bootstrap */
+
+/* General styles */
+html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    padding-top: 56px; /* For fixed navbar */
+    font-family: 'Roboto', sans-serif;
+    background-color: #212529 !important;
+  }
+  
+  section {
+    padding: 60px 0;
+  }
+  
+  .section-title {
+    margin-bottom: 40px;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background-color: var(--bs-primary);
+    margin: 15px auto 0;
+  }
+  
+  /* Header */
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, #00c6ff, #0072ff, #8e2de2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-brand:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 4px 8px rgba(0,198,255,0.4));
+  }
+  
+  .navbar-brand .brand-text {
+    font-weight: 900;
+    letter-spacing: -1px;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+  }
+  
+  .navbar-brand i {
+    color: #00c6ff;
+    font-size: 2.2rem;
+    text-shadow: 0 3px 6px rgba(0,198,255,0.5);
+    margin-right: 0.5rem;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  /* Hero section */
+  .hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://source.unsplash.com/sHfo3WOgGTU/1920x1080') no-repeat center center;
+    background-size: cover;
+    color: #ffffff !important;
+    text-align: center;
+    padding: 120px 0;
+  }
+  
+  .hero-section h1,
+  .hero-section p,
+  .hero-section .lead {
+    color: #ffffff !important;
+  }
+  
+  .hero-text {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .hero-text h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  /* User form */
+  .form-section {
+    background-color: #212529;
+  }
+  
+  .form-card {
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Features section */
+  .features-section {
+      background-color: #212529 !important;
+  }
+  .features-section h2.section-title,
+  .features-section .section-title {
+      color: white !important;
+      font-weight: 600;
+  }
+  
+  .feature-box {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 30px 20px;
+    background-color: #1f2a33;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #ffffff;
+    overflow: hidden;
+  }
+  
+  .feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+  
+  .feature-box h3,
+  .feature-box p {
+    color: #ffffff !important;
+  }
+  
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--bs-primary);
+  }
+  
+  /* Feature Box Image Backgrounds */
+  .feature-box {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(5px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .feature-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+      transition: opacity 0.3s ease;
+      background-size: cover;
+      background-position: center;
+  }
+  
+  .feature-box:hover::before {
+      opacity: 0.25;
+  }
+  
+  .feature-box-diet::before {
+      background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  }
+  
+  .feature-box-workout::before {
+      background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  }
+  
+  .feature-box-bmi::before {
+      background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  }
+  
+  .feature-box-food::before {
+      background-image: url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  }
+  
+  .feature-box-plans::before {
+      background-image: url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  }
+  
+  .feature-box-mobile::before {
+      background-image: url('https://images.unsplash.com/photo-1605296867424-35c82a8b1da1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+  }
+  
+  /* Testimonials - identical to nutrition tips */
+  .testimonial-section {
+    background-color: #212529;
+  }
+  .testimonial-section .section-title {
+    color: white !important;
+  }
+  .testimonial-card {
+    overflow: hidden;
+    background-color: #1f2a33;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 25px;
+  }
+  .testimonial-card h5,
+  .testimonial-card p,
+  .testimonial-card small {
+    color: #ffffff !important;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+  
+
+  
+  .testimonial-text {
+    position: relative;
+    padding: 15px 0;
+  }
+  
+  .testimonial-text::before {
+    content: '\201C';
+    position: absolute;
+    top: -10px;
+    left: -15px;
+    font-size: 60px;
+    color: var(--bs-primary);
+    opacity: 0.3;
+  }
+  
+  .client-info {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .client-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  /* FAQ section */
+  .accordion-button:not(.collapsed) {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+  }
+  
+  /* Contact section */
+  .contact-info-box {
+    margin-bottom: 30px;
+  }
+  
+  .contact-icon {
+    font-size: 2rem;
+    color: var(--bs-primary);
+    margin-bottom: 15px;
+  }
+  
+  /* Plan pages */
+  .plan-day-card {
+    margin-bottom: 30px;
+    transition: transform 0.3s;
+  }
+  
+  .plan-day-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .meal-card, .workout-card {
+    margin-bottom: 20px;
+    border-left: 4px solid var(--bs-primary);
+  }
+  
+
+  
+  /* BMI Result Styles */
+  .bmi-result {
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 20px;
+      background-color: #1f2a33 !important;
+      color: #ffffff !important;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+  }
+  
+  #bmi-result h4,
+  #bmi-result p {
+      color: #ffffff !important;
+      margin-bottom: 10px;
+  }
+  
+  #bmi-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00c6ff !important;
+  }
+  
+  .bmi-result:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .bmi-result h3,
+  .bmi-result p {
+      color: #2c3e50 !important;
+      text-shadow: none;
+  }
+  
+  .bmi-result .lead {
+      color: #2c3e50 !important;
+      font-weight: 500;
+  }
+  
+  /* BMI Category Colors */
+  .bmi-normal {
+      background-color: #28a745 !important;
+      border: 1px solid rgba(40, 167, 69, 0.8) !important;
+      color: #ffffff !important;
+  }
+  
+  .bmi-normal h4,
+  .bmi-normal p,
+  .bmi-normal #bmi-value {
+      color: #ffffff !important;
+  }
+  
+  .bmi-underweight {
+      background-color: rgba(0, 123, 255, 0.1);
+      border: 1px solid rgba(0, 123, 255, 0.2);
+  }
+  
+  .bmi-overweight {
+      background-color: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.2);
+  }
+  
+  .bmi-obese {
+      background-color: rgba(220, 53, 69, 0.1);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+  }
+  
+  /* BMI Category Specific Styles */
+  .bmi-result.bmi-normal {
+      border-left: 5px solid rgba(40, 167, 69, 0.8);
+  }
+  
+  .bmi-result.bmi-underweight {
+      border-left: 5px solid rgba(0, 123, 255, 0.8);
+  }
+  
+  .bmi-result.bmi-overweight {
+      border-left: 5px solid rgba(255, 193, 7, 0.8);
+  }
+  
+  .bmi-result.bmi-obese {
+      border-left: 5px solid rgba(220, 53, 69, 0.8);
+  }
+  
+  .bmi-result img {
+      border: 3px solid rgba(44, 62, 80, 0.1);
+      transition: transform 0.3s ease;
+  }
+  
+  .bmi-result:hover img {
+      transform: scale(1.1);
+  }
+  
+  .bmi-result .number-animate {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: #212529;
+    color: #fff;
+    padding: 60px 0 30px;
+  }
+  
+  .footer-links h5 {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .footer-links ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-links a:hover {
+    color: #fff;
+  }
+  
+  .social-icons {
+    margin-top: 20px;
+  }
+  
+  .social-icons a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .social-icons a:hover {
+    background-color: var(--bs-primary);
+    color: #fff; /* Kept white because it's on a dark background */
+  }
+  
+  .copyright {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+          transform: translateY(20px);
+      }
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+  
+  @keyframes slideInLeft {
+      from {
+          opacity: 0;
+          transform: translateX(-50px);
+      }
+      to {
+          opacity: 1;
+          transform: translateX(0);
+      }
+  }
+  
+  @keyframes slideInRight {
+      from {
+          opacity: 0;
+          transform: translateX(50px);
+      }
+      to {
+          opacity: 1;
+          transform: translateX(0);
+      }
+  }
+  
+  @keyframes zoomIn {
+      from {
+          opacity: 0;
+          transform: scale(0.95);
+      }
+      to {
+          opacity: 1;
+          transform: scale(1);
+      }
+  }
+  
+  @keyframes pulse {
+      0% {
+          transform: scale(1);
+      }
+      50% {
+          transform: scale(1.1);
+      }
+      100% {
+          transform: scale(1);
+      }
+  }
+  
+  @keyframes bounce {
+      0%, 100% {
+          transform: translateY(0);
+      }
+      50% {
+          transform: translateY(-10px);
+      }
+  }
+  
+  /* Animation Classes */
+  .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .slide-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .slide-in-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .zoom-in {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  /* Visible state for all animations */
+  .visible {
+      opacity: 1;
+      transform: translate(0) scale(1);
+  }
+  
+  /* Interactive Animations */
+  .tab-animate {
+      animation: fadeIn 0.5s ease forwards;
+  }
+  
+  .list-animate {
+      opacity: 0;
+      animation: slideInRight 0.5s ease forwards;
+  }
+  
+  .card-hover-ready {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-hover-active {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .accordion-animate {
+      animation: slideInRight 0.3s ease forwards;
+  }
+  
+  .pulse {
+      animation: pulse 2s infinite ease-in-out;
+  }
+  
+  /* Hero Section Animations */
+  .hero-text h1 {
+      animation: slideInLeft 1s ease forwards;
+  }
+  
+  .hero-text p {
+      animation: slideInRight 1s ease forwards;
+      animation-delay: 0.3s;
+      opacity: 0;
+  }
+  
+  .hero-text .btn {
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.6s;
+      opacity: 0;
+  }
+  
+  /* Feature Cards Animation */
+  .feature-box {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .feature-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .feature-icon {
+      transition: transform 0.3s ease;
+  }
+  
+  .feature-box:hover .feature-icon {
+      transform: scale(1.1);
+  }
+  
+  /* Form Elements Animation */
+  .form-control:focus {
+      transform: translateY(-2px);
+      transition: transform 0.3s ease;
+  }
+  
+  /* Button Hover Animation */
+  .btn {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* List Group Item Animation */
+  .list-group-item {
+      transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .list-group-item:hover {
+      transform: translateX(5px);
+      background-color: rgba(var(--bs-primary-rgb), 0.1);
+  }
+  
+  /* Image Transitions and Effects */
+  .meal-card {
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .meal-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .meal-card img {
+      transition: transform 0.5s ease;
+  }
+  
+  .meal-card:hover img {
+      transform: scale(1.05);
+  }
+  
+  .card-img-top {
+      transition: transform 0.5s ease;
+  }
+  
+  .card:hover .card-img-top {
+      transform: scale(1.05);
+  }
+  
+  .bmi-result {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .bmi-result:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .cta-section {
+      position: relative;
+      background-attachment: fixed;
+      transition: background-position 0.3s ease;
+  }
+  
+  /* Nutrition tips (dark background, deep cards, white text) */
+  .nutrition-tips {
+      background-color: #2c3e50;
+  }
+  .nutrition-tips .section-title {
+      color: white !important;
+  }
+  .nutrition-tips .card {
+      overflow: hidden;
+      background-color: #1f2a33; /* deep dark card */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.03);
+  }
+  .nutrition-tips .card-title,
+  .nutrition-tips .card-text {
+      color: #ffffff !important;
+  }
+  .nutrition-tips .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+  .nutrition-tips .card img {
+      transition: transform 0.5s ease;
+  }
+  .nutrition-tips .card:hover img {
+      transform: scale(1.05);
+  }
+  
+  /* ======== COMMON HEALTH PROBLEMS (IDENTICAL TO NUTRITION TIPS) ======== */
+  /* Kept identical to nutrition-tips as requested; removed all other duplicates/conflicts */
+  .health-problems {
+      background-color: #2c3e50; /* same dark bg as nutrition-tips */
+  }
+  .health-problems .section-title {
+      color: white !important; /* title white like nutrition-tips */
+  }
+  .health-problems .card {
+      overflow: hidden;
+      background-color: #1f2a33; /* deep dark card - identical */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.03);
+  }
+  .health-problems .card-title,
+  .health-problems .card-text {
+      color: #ffffff !important; /* text inside cards white */
+  }
+  .health-problems .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+  .health-problems .card img {
+      transition: transform 0.5s ease;
+  }
+  .health-problems .card:hover img {
+      transform: scale(1.05);
+  }
+  .health-problems .feature-icon {
+      color: var(--bs-primary);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 992px) {
+    .hero-text h1 {
+      font-size: 2.5rem;
+    }
+    
+    section {
+      padding: 40px 0;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .hero-text h1 {
+      font-size: 2rem;
+    }
+    
+    .section-title {
+      margin-bottom: 30px;
+    }
+    
+    .hero-section {
+      padding: 100px 0;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .hero-text h1 {
+      font-size: 1.8rem;
+    }
+    
+    section {
+      padding: 30px 0;
+    }
+    
+    .form-card {
+      padding: 15px;
+    }
+    
+    .feature-box {
+      padding: 20px 15px;
+    }
+  }
+  
+  /* Diet Plan Styles */
+  /* NOTE: I left diet-content as it was in your file (if you want white instead, tell me) */
+  .diet-content {
+      background-color: var(--bs-dark);
+      color: white;
+  }
+
+  /* Weekly Diet Plan title white */
+  .diet-plan-section .section-title {
+      color: white !important;
+  }
+  
+  .diet-content .card {
+      background-color: rgba(33, 37, 41, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .diet-content .card-title,
+  .diet-content .card-text,
+  .diet-content p,
+  .diet-content h3,
+  .diet-content h4,
+  .diet-content h5,
+  .diet-content h6,
+  .diet-content li,
+  .diet-content .accordion-button {
+      color: rgb(244, 239, 239) !important;
+  }
+  
+  .diet-content .list-group-item {
+      background-color: transparent;
+      border-color: rgba(255, 255, 255, 0.1);
+      color: white;
+  }
+  
+  .diet-content .accordion-item {
+      background-color: rgba(33, 37, 41, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .diet-content .accordion-button {
+      background-color: rgba(33, 37, 41, 0.95);
+  }
+  
+  /* Index Page Text Colors */
+  .features-section,
+  .features-section h2,
+  .features-section h3,
+  .features-section p {
+      color: #212529 !important;
+  }
+  
+  .testimonial-section,
+  .testimonial-section h2,
+  .testimonial-section h5,
+  .testimonial-section p,
+  .testimonial-section small {
+      color: #212529 !important;
+  }
+  
+  .form-section,
+  .form-section h2,
+  .form-section label,
+  .form-section p {
+      color: #212529 !important;
+  }
+  
+  .bmi-section {
+      background-color: #212529 !important;
+      color: #212529 !important;
+  }
+  .success-stories-section {
+      color: #212529 !important;
+  }
+  
+  .bmi-section .section-title,
+  .success-stories-section .section-title {
+      color: #ffffff !important;
+  }
+  
+  /* Text Color Overrides */
+  .hero-section {
+      color: #ffffff !important;
+  }
+  
+  .hero-section h1,
+  .hero-section p,
+  .hero-section .lead {
+      color: #ffffff !important;
+  }
+  
+  .features-section,
+  .testimonial-section,
+  .form-section,
+  .bmi-section {
+      color: #212529 !important;
+  }
+  
+  .feature-box,
+  .testimonial-card,
+  .form-card {
+      background-color: #ffffff;
+  }
+  
+  .feature-box h3,
+  .feature-box p,
+  .testimonial-card h5,
+  .testimonial-card p,
+  .testimonial-card small,
+  .form-section h2,
+  .form-section label,
+  .form-section .form-text,
+  .bmi-section h2,
+  .bmi-section label,
+  .bmi-section p {
+      color: #212529 !important;
+  }
+  
+  .section-title {
+      color: #212529 !important;
+  }
+  
+  /* Override for Features Section Title */
+  .features-section .container h2.section-title {
+      color: #212529 !important;
+      font-weight: 600 !important;
+  }
+  
+  /* Workout Plan Section */
+  .workout-plan-section {
+      background-color: #212529 !important;
+      color: #ffffff !important;
+  }
+  
+  .workout-plan-section .section-title {
+      color: #ffffff !important;
+  }
+  
+  .workout-plan-section .nav-tabs {
+      border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .workout-plan-section .nav-tabs .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-bottom: 2px solid transparent;
+  }
+  
+  .workout-plan-section .nav-tabs .nav-link:hover {
+      color: #ffffff;
+      border-color: transparent;
+      background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .workout-plan-section .nav-tabs .nav-link.active {
+      color: #ffffff;
+      background-color: transparent;
+      border-bottom: 2px solid #ffffff;
+  }
+  
+  .workout-plan-section .accordion-item {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .workout-plan-section .accordion-button {
+      background-color: transparent;
+      color: #ffffff;
+  }
+  
+  .workout-plan-section .accordion-button:not(.collapsed) {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+  }
+  
+  .workout-plan-section .accordion-body {
+      background-color: rgba(0, 0, 0, 0.2);
+      color: #ffffff;
+  }
+  
+  .workout-plan-section .list-group-item {
+      background-color: transparent;
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+  }
+  
+  .workout-plan-section .card {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .workout-plan-section .card-body {
+      color: #ffffff;
+  }
+  
+  /* AI Analysis Results - Nutrition Estimate Keys */
+  .nutrition-estimate * {
+      color: #000000 !important;
+  }
+  
+  /* Professional 3D Form Styling */
+  .form-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9)) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4) !important;
+      border-radius: 25px !important;
+      position: relative;
+      overflow: hidden;
+  }
+  
+  .form-control {
+      background: rgba(255,255,255,0.8) !important;
+      border: 2px solid rgba(0,198,255,0.3) !important;
+      border-radius: 15px !important;
+      color: #2c3e50 !important;
+      padding: 18px 24px !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(10px) !important;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05) !important;
+  }
+  
+  .form-control:focus {
+      transform: translateY(-3px) scale(1.02) !important;
+      box-shadow: 0 15px 35px rgba(0,198,255,0.4), inset 0 2px 8px rgba(0,0,0,0.05) !important;
+      border-color: rgba(0,198,255,0.8) !important;
+      background: rgba(255,255,255,0.95) !important;
+      outline: none !important;
+  }
+  
+  .form-select {
+      background: rgba(255,255,255,0.8) !important;
+      border: 2px solid rgba(0,198,255,0.3) !important;
+      border-radius: 15px !important;
+      color: #2c3e50 !important;
+      padding: 18px 24px !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(10px) !important;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05) !important;
+  }
+  
+  .form-select:focus {
+      transform: translateY(-3px) scale(1.02) !important;
+      box-shadow: 0 15px 35px rgba(0,198,255,0.4) !important;
+      border-color: rgba(0,198,255,0.8) !important;
+      background: rgba(255,255,255,0.95) !important;
+      outline: none !important;
+  }
+  
+  .form-section {
+      background: #2c3e50 !important;
+      position: relative;
+      overflow: hidden;
+  }
+  
+  .form-section .section-title {
+      color: #ffffff !important;
+      font-weight: 700 !important;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+      font-size: 2.5rem !important;
+  }
+  
+  /* Apple-Style 3D Premium Interface */
+  
+  /* Global 3D enhancements */
+  * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Enhanced card styling */
+  .card, .feature-box, .testimonial-card {
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05) !important;
+      border-radius: 16px !important;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+      transform: translateZ(0) !important;
+      will-change: transform !important;
+  }
+  
+  .card:hover, .feature-box:hover, .testimonial-card:hover {
+      transform: translateY(-8px) translateZ(0) scale(1.02) !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.1) !important;
+  }
+  
+  /* Enhanced nutrition tips cards */
+  .nutrition-tips .card {
+      background: rgba(31,42,51,0.9) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.08) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  }
+  
+  .nutrition-tips .card:hover {
+      transform: translateY(-12px) translateZ(0) scale(1.03) !important;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+  }
+  
+  /* Enhanced health problems cards */
+  .health-problems .card {
+      background: rgba(31,42,51,0.9) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.08) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  }
+  
+  .health-problems .card:hover {
+      transform: translateY(-12px) translateZ(0) scale(1.03) !important;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+  }
+  
+  /* Parallax sections */
+  .hero-section, .nutrition-tips, .health-problems {
+      transform: translateZ(0) !important;
+      will-change: transform !important;
+  }
+  
+  /* Enhanced buttons */
+  .btn {
+      backdrop-filter: blur(20px) !important;
+      border-radius: 12px !important;
+      border: 1px solid rgba(255,255,255,0.2) !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+      transform: translateZ(0) !important;
+  }
+  
+  .btn:hover {
+      transform: translateY(-2px) translateZ(0) scale(1.05) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+  }
+  
+  /* Enhanced sections with subtle parallax */
+  section {
+      position: relative !important;
+      transform: translateZ(0) !important;
+  }
+  
+  /* Smooth scroll behavior */
+  html {
+      scroll-behavior: smooth !important;
+  }
+  
+  /* Enhanced image hover effects */
+  .card img, .feature-box img {
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+      transform: translateZ(0) !important;
+  }
+  
+  .card:hover img, .feature-box:hover img {
+      transform: scale(1.08) translateZ(0) !important;
+  }
+  
+  /* Enhanced BMI result styling */
+  .bmi-result {
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.15) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+      border-radius: 20px !important;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+  
+  .bmi-result:hover {
+      transform: translateY(-6px) translateZ(0) scale(1.02) !important;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  }
+  
+  /* Enhanced accordion styling */
+  .accordion-item {
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 12px !important;
+      margin-bottom: 8px !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05) !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+  
+  .accordion-button {
+      backdrop-filter: blur(20px) !important;
+      border-radius: 12px !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+  
+  /* Enhanced list group items */
+  .list-group-item {
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 8px !important;
+      margin-bottom: 4px !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+  
+  .list-group-item:hover {
+      transform: translateX(4px) translateZ(0) !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important;
+  }
+  
+  /* Performance optimizations */
+  .card, .feature-box, .testimonial-card, .btn, .bmi-result {
+      backface-visibility: hidden !important;
+      perspective: 1000px !important;
+  }
+  
+  /* Responsive enhancements */
+  @media (max-width: 768px) {
+      .card:hover, .feature-box:hover, .testimonial-card:hover {
+          transform: translateY(-4px) translateZ(0) scale(1.01) !important;
+      }
+      
+      .nutrition-tips .card:hover, .health-problems .card:hover {
+          transform: translateY(-6px) translateZ(0) scale(1.02) !important;
+      }
+  }
+  
+  /* Navbar z-index fix */
+  .navbar {
+      z-index: 1050 !important;
+  }
+  
+  /* Notification positioning fix */
+  .notification {
+      position: fixed;
+      top: 5rem;
+      right: 1rem;
+      max-width: 300px;
+      z-index: 1040;
+      word-wrap: break-word;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Global notification and toast positioning */
+  .notification, .toast {
+      position: fixed !important;
+      top: 6rem !important;
+      right: 1rem !important;
+      z-index: 1000 !important;
+      max-width: 280px !important;
+      word-wrap: break-word !important;
+  }
+  
+  /* Responsive notification positioning */
+  @media (max-width: 768px) {
+      .notification, .toast {
+          top: 4.5rem !important;
+          right: 0.5rem !important;
+          left: 0.5rem !important;
+          max-width: none !important;
+      }
+  }
+  
+  /* Stack multiple notifications */
+  .notification:nth-of-type(2), .toast:nth-of-type(2) {
+      top: 8rem !important;
+  }
+  
+  .notification:nth-of-type(3), .toast:nth-of-type(3) {
+      top: 10rem !important;
+  }
+  
+  /* FAQ Section Title Styling */
+  .faq-section .section-title {
+      color: white !important;
+  }
+  
+  /* Contact Page FAQ Teaser Section Title */
+  .faq-teaser .section-title {
+      color: white !important;
+  }
+  
+  /* FAQ Page CTA Section Dark Background */
+  .cta-section.bg-light {
+      background-color: #2c3e50 !important;
+  }
+  
+  .cta-section.bg-light h2,
+  .cta-section.bg-light p {
+      color: white !important;
+  }
+  
+  /* End of file */
+  

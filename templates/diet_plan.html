@@ -1,0 +1,345 @@
+{% extends 'layout.html' %}
+
+{% block title %}Your Personalized Diet Plan - The Web Workout{% endblock %}
+
+{% block content %}
+<!-- Diet Plan Header -->
+<section class="page-header text-white text-center py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), url({{ 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'|safe }}) no-repeat center center; background-size: cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4">Your Personalized Diet Plan</h1>
+                <p class="lead">Tailored to your body type, preferences, and goals</p>
+                <p class="text-light">Currently viewing: <strong>Week {{ current_week }}</strong></p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group-vertical">
+                    <a href="{{ url_for('grocery_list') }}" class="btn btn-success btn-lg mb-2">
+                        🛒 Grocery List (Week {{ current_week }})
+                    </a>
+                    <a href="{{ url_for('download_diet_pdf') }}" class="btn btn-light btn-lg">
+                        📄 Download PDF (Week {{ current_week }})
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- User Stats Section -->
+<section class="user-stats py-5 diet-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Your Profile</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Age
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.age }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Gender
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.gender|capitalize }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Height
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.height }} cm</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Weight
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.weight }} kg</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Food Preference
+                                        <span class="badge bg-primary rounded-pill">
+                                            {% if user_data.food_preference == 'veg' %}
+                                                Vegetarian
+                                            {% else %}
+                                                Non-Vegetarian
+                                            {% endif %}
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Workout Intensity
+                                        <span class="badge bg-primary rounded-pill">
+                                            {% if user_data.intensity == 'easy' %}
+                                                Easy
+                                            {% elif user_data.intensity == 'intermediate' %}
+                                                Intermediate
+                                            {% elif user_data.intensity == 'hardcore' %}
+                                                Hardcore
+                                            {% else %}
+                                                {{ user_data.intensity|capitalize }}
+                                            {% endif %}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BMI Result Section -->
+<section class="bmi-section py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% set bmi_class = '' %}
+                {% if user_data.bmi_category == 'Underweight' %}
+                    {% set bmi_class = 'bmi-underweight' %}
+                {% elif user_data.bmi_category == 'Normal weight' %}
+                    {% set bmi_class = 'bmi-normal' %}
+                {% elif user_data.bmi_category == 'Overweight' %}
+                    {% set bmi_class = 'bmi-overweight' %}
+                {% else %}
+                    {% set bmi_class = 'bmi-obese' %}
+                {% endif %}
+                
+                <div class="bmi-result {{ bmi_class }} text-center p-4" style="background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url({{ 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}) no-repeat center center; background-size: cover; border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <img src="{{ 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80'|safe }}" alt="BMI Chart" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h3 class="mb-1">Your BMI: {{ user_data.bmi }}</h3>
+                            <p class="lead mb-0">Category: {{ user_data.bmi_category }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3 mb-5">
+                    <a href="{{ url_for('workout_plan') }}" class="btn btn-primary">View Your Workout Plan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Diet Plan Section -->
+<section class="diet-plan-section py-5 diet-content">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">{{ diet_plan.level }}</h2>
+            <h3 class="text-primary">{{ diet_plan.week }}</h3>
+            <p class="lead">Protein Target: <strong>{{ diet_plan.protein_target }}</strong></p>
+            
+            <!-- Week Navigation -->
+            <div class="btn-group mb-4" role="group">
+                {% for week_num in range(1, 5) %}
+                    <a href="{{ url_for('diet_plan', week=week_num) }}" 
+                       class="btn {% if current_week == week_num %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        Week {{ week_num }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="accordion" id="dietPlanAccordion">
+            {% set ordered_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+
+            {% for day in ordered_days %}
+                {% if day in diet_plan %}
+                    {% set meals = diet_plan[day] %}
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header" id="heading{{ day }}">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ day }}" aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ day }}">
+                                {{ day }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ day }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ day }}" data-bs-parent="#dietPlanAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <!-- Daily Summary -->
+                                    {% if meals.calories %}
+                                    <div class="col-12">
+                                        <div class="alert alert-primary text-center mb-3">
+                                            <strong>Daily Summary:</strong> {{ meals.calories }} | <strong>Protein:</strong> {{ meals.protein }}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <!-- Early Morning -->
+                                    {% if meals.early_morning %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-sun me-2"></i>Early Morning</h6>
+                                                <p class="mb-1"><strong>{{ meals.early_morning.meal }}</strong></p>
+                                                <small class="text-muted">{{ meals.early_morning.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Breakfast -->
+                                    {% if meals.breakfast %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-coffee me-2"></i>Breakfast</h6>
+                                                <p class="mb-1"><strong>{{ meals.breakfast.meal }}</strong></p>
+                                                {% if meals.breakfast.details %}
+                                                <p class="mb-1">{{ meals.breakfast.details }}</p>
+                                                {% endif %}
+                                                <small class="text-muted">{{ meals.breakfast.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Lunch -->
+                                    {% if meals.lunch %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-utensils me-2"></i>Lunch</h6>
+                                                <p class="mb-1"><strong>{{ meals.lunch.meal }}</strong></p>
+                                                {% if meals.lunch.details %}
+                                                <p class="mb-1">{{ meals.lunch.details }}</p>
+                                                {% endif %}
+                                                <small class="text-muted">{{ meals.lunch.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Snack -->
+                                    {% if meals.snack %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-apple-alt me-2"></i>Snack</h6>
+                                                <p class="mb-1"><strong>{{ meals.snack.meal }}</strong></p>
+                                                <small class="text-muted">{{ meals.snack.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Pre-workout -->
+                                    {% if meals.pre_workout %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-dumbbell me-2"></i>Pre-workout</h6>
+                                                <p class="mb-1"><strong>{{ meals.pre_workout.meal }}</strong></p>
+                                                <small class="text-muted">{{ meals.pre_workout.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Post-workout -->
+                                    {% if meals.post_workout %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-trophy me-2"></i>Post-workout</h6>
+                                                <p class="mb-1"><strong>{{ meals.post_workout.meal }}</strong></p>
+                                                <small class="text-muted">{{ meals.post_workout.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Dinner -->
+                                    {% if meals.dinner %}
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card meal-card mb-3 fade-in">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><i class="fas fa-moon me-2"></i>Dinner</h6>
+                                                <p class="mb-1"><strong>{{ meals.dinner.meal }}</strong></p>
+                                                <small class="text-muted">{{ meals.dinner.time }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <!-- Next Week Button -->
+        <div class="text-center mt-5">
+            {% if current_week < 4 %}
+                <a href="{{ url_for('diet_plan', week=current_week + 1) }}" class="btn btn-success btn-lg me-3">
+                    <i class="fas fa-arrow-right me-2"></i>Next Week (Week {{ current_week + 1 }})
+                </a>
+            {% endif %}
+            {% if current_week > 1 %}
+                <a href="{{ url_for('diet_plan', week=current_week - 1) }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Previous Week
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Nutrition Tips Section -->
+<section class="nutrition-tips py-5">
+    <div class="container">
+        <h2 class="text-center section-title mb-5">Nutrition Tips</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Stay Hydrated" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tint feature-icon"></i>
+                        <h4 class="card-title">Stay Hydrated</h4>
+                        <p class="card-text">Drink at least 8 glasses of water daily. Hydration aids digestion, nutrient absorption, and helps control hunger.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="https://images.pexels.com/photos/1556691/pexels-photo-1556691.jpeg?auto=compress&cs=tinysrgb&w=800&h=200&fit=crop" class="card-img-top" alt="Meal Timing" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock feature-icon"></i>
+                        <h4 class="card-title">Meal Timing</h4>
+                        <p class="card-text">Try to eat at consistent times each day. Avoid large meals before bedtime, aim to finish eating 2-3 hours before sleep.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1514995669114-6081e934b693?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Portion Control" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-balance-scale feature-icon"></i>
+                        <h4 class="card-title">Portion Control</h4>
+                        <p class="card-text">Be mindful of portion sizes. Use smaller plates, measure servings initially, and listen to your body's hunger signals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nutrition Tips Section -->
+<div class="text-center my-5">
+    <a href="{{ url_for('workout_plan') }}" class="btn btn-success btn-lg">Next: View Your Workout Plan</a>
+</div>
+
+<!-- Call to Action -->
+<section class="cta-section py-5 text-white text-center" style="background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.85)), url({{ 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'|safe }}) no-repeat center center; background-size: cover;">
+    <div class="container">
+        <h2 class="mb-4">Ready to Start Your Fitness Journey?</h2>
+        <p class="lead mb-4">Combine your diet plan with our tailored workout routine for maximum results!</p>
+        <a href="{{ url_for('workout_plan') }}" class="btn btn-light btn-lg">View Your Workout Plan</a>
+    </div>
+</section>
+{% endblock %}

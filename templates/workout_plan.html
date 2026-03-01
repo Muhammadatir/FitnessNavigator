@@ -1,0 +1,1304 @@
+{% extends 'layout.html' %}
+
+{% block title %}Your Personalized Workout Plan - The Web Workout{% endblock %}
+
+{% block content %}
+
+<!-- Workout Plan Header -->
+<section class="page-header text-white text-center py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url({{ 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'|safe }}) no-repeat center center; background-size: cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4">Your Personalized Workout Plan</h1>
+                <p class="lead">Tailored to your fitness level and goals</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{{ url_for('download_workout_pdf') }}" class="btn btn-light btn-lg">
+                    📄 Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- User Stats Section -->
+<section class="user-stats py-5 diet-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Your Profile</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Age
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.age }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Gender
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.gender|capitalize }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Height
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.height }} cm</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Weight
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.weight }} kg</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Food Preference
+                                        <span class="badge bg-primary rounded-pill">
+                                            {% if user_data.food_preference == 'veg' %}
+                                                Vegetarian
+                                            {% else %}
+                                                Non-Vegetarian
+                                            {% endif %}
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Workout Intensity
+                                        <span class="badge bg-primary rounded-pill">
+                                            {% if user_data.intensity == 'easy' %}
+                                                Easy
+                                            {% elif user_data.intensity == 'intermediate' %}
+                                                Intermediate
+                                            {% elif user_data.intensity == 'hardcore' %}
+                                                Hardcore
+                                            {% else %}
+                                                {{ user_data.intensity|capitalize }}
+                                            {% endif %}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BMI Result Section -->
+<section class="bmi-section py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% set bmi_class = '' %}
+                {% if user_data.bmi_category == 'Underweight' %}
+                    {% set bmi_class = 'bmi-underweight' %}
+                {% elif user_data.bmi_category == 'Normal weight' %}
+                    {% set bmi_class = 'bmi-normal' %}
+                {% elif user_data.bmi_category == 'Overweight' %}
+                    {% set bmi_class = 'bmi-overweight' %}
+                {% else %}
+                    {% set bmi_class = 'bmi-obese' %}
+                {% endif %}
+                
+                <div class="bmi-result {{ bmi_class }} text-center p-4" style="background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url({{ 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}) no-repeat center center; background-size: cover; border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <img src="{{ 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80'|safe }}" alt="BMI Chart" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h3 class="mb-1">Your BMI: {{ user_data.bmi }}</h3>
+                            <p class="lead mb-0">Category: {{ user_data.bmi_category }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3 mb-5">
+                    <a href="{{ url_for('diet_plan') }}" class="btn btn-primary">View Your Diet Plan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Optimal Workout Time Section -->
+<section class="optimal-time-section py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="card-body text-center p-4">
+                        <h4 class="mb-3">⏰ Optimal Workout Time</h4>
+                        <p class="mb-3">Your energy peaks at <strong>6 PM</strong>. Schedule intense workouts then for <strong>23% better performance</strong>.</p>
+                        <button class="btn btn-light btn-lg" onclick="scheduleWorkout()">Schedule Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nutrition Boost Section -->
+<section class="nutrition-boost-section py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">
+                    <div class="card-body text-center p-4">
+                        <h4 class="mb-3">🥗 Nutrition Boost</h4>
+                        <p class="mb-3">Add <strong>15g more protein</strong> to reach your muscle-building goals. Try Greek yogurt or chicken.</p>
+                        <button class="btn btn-light btn-lg" onclick="viewFoods()">View Foods</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Workout Plan Section -->
+<section class="workout-plan-section py-5">
+    <div class="container">
+        <h2 class="text-center section-title mb-5 fade-in">Monthly Workout Plan - 
+            {% if user_data.intensity == 'easy' %}
+                Easy
+            {% elif user_data.intensity == 'intermediate' %}
+                Intermediate
+            {% elif user_data.intensity == 'hardcore' %}
+                Hardcore
+            {% else %}
+                {{ user_data.intensity|capitalize }}
+            {% endif %}
+         Intensity</h2>
+
+        <!-- Stacked Week Cards Container -->
+        <div class="stacked-cards-container">
+            <div class="card-stack" id="cardStack">
+                {% for week, days in workout_plan.items() %}
+                <div class="week-card-wrapper" data-week="{{ loop.index }}" data-index="{{ loop.index0 }}">
+                    <div class="week-card">
+                        <div class="week-header">
+                            <h3>{{ week }}</h3>
+                            <p>6-Day Workout Plan</p>
+                            <div class="card-indicator">{{ loop.index }}/{{ workout_plan|length }}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Days Grid -->
+                    <div class="days-section" style="display: none;">
+                        <div class="days-grid">
+                            {% set ordered_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] %}
+                            {% for day in ordered_days %}
+                                {% if day in days %}
+                                    {% set workout = days[day] %}
+                                    <div class="day-card" data-day="{{ day }}" data-week="{{ loop.index0 }}">
+                                        <div class="day-number">{{ loop.index }}</div>
+                                        <div class="day-name">{{ day[:3] }}</div>
+                                        <div class="day-focus">{{ workout.focus }}</div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Navigation Arrows -->
+            <button class="nav-arrow prev-arrow" id="prevWeek">‹</button>
+            <button class="nav-arrow next-arrow" id="nextWeek">›</button>
+            
+            <!-- Swipe Indicators -->
+            <div class="swipe-indicators">
+                {% for week in workout_plan %}
+                <div class="swipe-dot {{ 'active' if loop.first else '' }}" data-week="{{ loop.index }}"></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Exercise Modal -->
+<div class="exercise-modal" id="exerciseModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle"></h3>
+            <button class="close-modal" id="closeModal">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="exercises-grid" id="exercisesGrid"></div>
+            <div class="workout-notes" id="workoutNotes" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Player Modal -->
+<div class="video-modal" id="videoModal">
+    <div class="video-overlay"></div>
+    <div class="video-content">
+        <button class="close-video" id="closeVideo">×</button>
+        <div class="video-player" id="videoPlayer"></div>
+    </div>
+</div>
+
+<!-- Hidden workout data for JavaScript -->
+<script type="application/json" id="workoutData">
+{{ workout_plan | tojson }}
+</script>
+
+<style>
+/* Stacked Cards Container */
+.stacked-cards-container {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    height: 900px;
+    perspective: 1000px;
+}
+
+.card-stack {
+    position: relative;
+    width: 100%;
+    height: 800px;
+}
+
+.week-card-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center bottom;
+}
+
+.week-card {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.week-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.week-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.week-header h3 {
+    font-size: 4rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.week-header p {
+    margin: 0 0 2rem 0;
+    opacity: 0.9;
+    font-size: 2rem;
+}
+
+.card-indicator {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: rgba(255,255,255,0.2);
+    padding: 0.7rem 1.2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+/* Stacked positioning */
+.week-card-wrapper:nth-child(1) {
+    z-index: 10;
+    transform: scale(1) translateY(0px);
+}
+
+.week-card-wrapper:nth-child(2) {
+    z-index: 9;
+    transform: scale(0.95) translateY(10px);
+}
+
+.week-card-wrapper:nth-child(3) {
+    z-index: 8;
+    transform: scale(0.9) translateY(20px);
+}
+
+.week-card-wrapper:nth-child(4) {
+    z-index: 7;
+    transform: scale(0.85) translateY(30px);
+}
+
+.week-card-wrapper:nth-child(n+5) {
+    z-index: 6;
+    transform: scale(0.8) translateY(40px);
+    opacity: 0.7;
+}
+
+/* Swipe animations */
+.week-card-wrapper.swiping-left {
+    transform: translateX(-100%) rotate(-10deg) scale(0.8);
+    opacity: 0;
+}
+
+.week-card-wrapper.swiping-right {
+    transform: translateX(100%) rotate(10deg) scale(0.8);
+    opacity: 0;
+}
+
+.week-card-wrapper.moving-up {
+    animation: moveUp 0.4s ease forwards;
+}
+
+@keyframes moveUp {
+    to {
+        transform: scale(1) translateY(0px);
+        z-index: 10;
+    }
+}
+
+/* Days Section */
+.days-section {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 1rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: expandDown 0.5s ease;
+    z-index: 15;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.day-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.day-card:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,123,255,0.3);
+}
+
+.day-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #007bff;
+}
+
+.day-card:hover .day-number {
+    color: white;
+}
+
+.day-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.day-focus {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-weight: 500;
+}
+
+/* Swipe Indicators */
+.swipe-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.swipe-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.swipe-dot.active {
+    background: #007bff;
+    transform: scale(1.3);
+}
+
+/* Navigation Arrows */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+}
+
+.nav-arrow:hover {
+    background: #0056b3;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+}
+
+.prev-arrow {
+    left: -70px;
+}
+
+.next-arrow {
+    right: -70px;
+}
+
+/* Exercise Modal */
+.exercise-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUpModal 0.4s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.exercises-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.exercise-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.exercise-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.exercise-thumbnail {
+    position: relative;
+    height: 180px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.play-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.exercise-thumbnail:hover .play-icon {
+    transform: scale(1.1);
+    background: white;
+}
+
+.exercise-info {
+    padding: 1.5rem;
+}
+
+.exercise-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.exercise-details {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.workout-notes {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-top: 2rem;
+}
+
+/* Video Modal */
+.video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: none;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+}
+
+.video-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90%;
+}
+
+.close-video {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.video-player {
+    width: 100%;
+    height: 450px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.video-player iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+@keyframes slideUpModal {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stacked-cards-container {
+        max-width: 380px;
+        margin: 0 1rem;
+    }
+    
+    .prev-arrow {
+        left: -50px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+    }
+    
+    .next-arrow {
+        right: -50px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+    }
+    
+    .week-card-wrapper {
+        height: 450px;
+    }
+    
+    .week-header h3 {
+        font-size: 3rem;
+    }
+    
+    .days-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .day-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .exercises-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        max-height: 90vh;
+    }
+    
+    .video-content {
+        width: 95%;
+    }
+    
+    .video-player {
+        height: 250px;
+    }
+}
+</style>
+
+<script>
+class StackedCardWorkoutApp {
+    constructor() {
+        this.currentWeek = 0;
+        this.totalWeeks = 0;
+        this.workoutData = {};
+        this.startX = 0;
+        this.startY = 0;
+        this.currentX = 0;
+        this.currentY = 0;
+        this.animationLocked = false;
+        this.selectedWeek = null;
+        this.cardStack = [];
+        
+        this.init();
+    }
+    
+    init() {
+        this.loadWorkoutData();
+        this.bindEvents();
+    }
+    
+    loadWorkoutData() {
+        const dataElement = document.getElementById('workoutData');
+        if (dataElement) {
+            this.workoutData = JSON.parse(dataElement.textContent);
+            this.totalWeeks = Object.keys(this.workoutData).length;
+        }
+    }
+    
+    bindEvents() {
+        // Initialize card stack
+        this.cardStack = Array.from(document.querySelectorAll('.week-card-wrapper'));
+        this.updateStackPositions();
+        
+        // Simple click handlers for all week cards
+        this.cardStack.forEach((card, index) => {
+            const weekCard = card.querySelector('.week-card');
+            weekCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggleWeekExpansion(card);
+            });
+        });
+        
+        // Day card clicks
+        document.querySelectorAll('.day-card').forEach(dayCard => {
+            dayCard.addEventListener('click', () => {
+                this.openExerciseModal(dayCard);
+            });
+        });
+        
+        // Navigation arrows
+        document.getElementById('prevWeek').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!this.animationLocked) {
+                this.animationLocked = true;
+                const bottomCard = this.cardStack.pop();
+                this.cardStack.unshift(bottomCard);
+                this.updateStackPositions();
+                setTimeout(() => { this.animationLocked = false; }, 100);
+            }
+        });
+        
+        document.getElementById('nextWeek').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!this.animationLocked) {
+                this.animationLocked = true;
+                const topCard = this.cardStack.shift();
+                this.cardStack.push(topCard);
+                this.updateStackPositions();
+                setTimeout(() => { this.animationLocked = false; }, 100);
+            }
+        });
+        
+        // Swipe indicators - simple click to next
+        document.querySelectorAll('.swipe-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                if (!this.animationLocked) {
+                    this.animationLocked = true;
+                    const topCard = this.cardStack.shift();
+                    this.cardStack.push(topCard);
+                    this.updateStackPositions();
+                    setTimeout(() => { this.animationLocked = false; }, 100);
+                }
+            });
+        });
+        
+        // Modal events
+        document.getElementById('closeModal').addEventListener('click', () => {
+            this.closeExerciseModal();
+        });
+        
+        document.querySelector('.modal-overlay').addEventListener('click', () => {
+            this.closeExerciseModal();
+        });
+        
+        document.getElementById('closeVideo').addEventListener('click', () => {
+            this.closeVideoModal();
+        });
+        
+        document.querySelector('.video-overlay').addEventListener('click', () => {
+            this.closeVideoModal();
+        });
+    }
+    
+    updateStackPositions() {
+        this.cardStack.forEach((card, index) => {
+            card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.zIndex = this.totalWeeks - index;
+            
+            if (index === 0) {
+                card.style.transform = 'scale(1) translateY(0px)';
+                card.style.opacity = '1';
+            } else if (index === 1) {
+                card.style.transform = 'scale(0.95) translateY(10px)';
+                card.style.opacity = '1';
+            } else if (index === 2) {
+                card.style.transform = 'scale(0.9) translateY(20px)';
+                card.style.opacity = '1';
+            } else if (index === 3) {
+                card.style.transform = 'scale(0.85) translateY(30px)';
+                card.style.opacity = '1';
+            } else {
+                card.style.transform = 'scale(0.8) translateY(40px)';
+                card.style.opacity = '0.7';
+            }
+        });
+        
+        // Update indicators
+        document.querySelectorAll('.swipe-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === 0);
+        });
+    }
+    
+
+    
+    toggleWeekExpansion(card) {
+        const daysSection = card.querySelector('.days-section');
+        
+        if (!daysSection) return;
+        
+        // Check if this section is currently open
+        const isCurrentlyOpen = daysSection.style.display === 'block';
+        
+        // Hide all sections first
+        document.querySelectorAll('.days-section').forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        // If it wasn't open, open it now
+        if (!isCurrentlyOpen) {
+            daysSection.style.display = 'block';
+        }
+    }
+    
+    openExerciseModal(dayCard) {
+        const day = dayCard.dataset.day;
+        const weekIndex = parseInt(dayCard.dataset.week);
+        const weekKey = Object.keys(this.workoutData)[weekIndex];
+        const dayData = this.workoutData[weekKey][day];
+        
+        if (!dayData) return;
+        
+        // Set modal title
+        document.getElementById('modalTitle').textContent = `${day} - ${dayData.focus}`;
+        
+        // Create exercises grid
+        const exercisesGrid = document.getElementById('exercisesGrid');
+        exercisesGrid.innerHTML = '';
+        
+        dayData.exercises.forEach(exercise => {
+            const exerciseCard = this.createExerciseCard(exercise);
+            exercisesGrid.appendChild(exerciseCard);
+        });
+        
+        // Show workout notes if available
+        const notesElement = document.getElementById('workoutNotes');
+        if (dayData.notes) {
+            notesElement.innerHTML = `<strong>Notes:</strong> ${dayData.notes}`;
+            notesElement.style.display = 'block';
+        } else {
+            notesElement.style.display = 'none';
+        }
+        
+        // Show modal
+        document.getElementById('exerciseModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    createExerciseCard(exercise) {
+        const card = document.createElement('div');
+        card.className = 'exercise-card';
+        
+        const videoId = this.extractVideoId(exercise.video_url);
+        const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+        
+        card.innerHTML = `
+            <div class="exercise-thumbnail">
+                ${thumbnailUrl ? `<img src="${thumbnailUrl}" alt="${exercise.name}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">` : ''}
+                <div class="play-icon">▶</div>
+            </div>
+            <div class="exercise-info">
+                <div class="exercise-title">${exercise.name}</div>
+                <div class="exercise-details">${exercise.details}</div>
+            </div>
+        `;
+        
+        // Add click event listener
+        const thumbnail = card.querySelector('.exercise-thumbnail');
+        if (thumbnail && exercise.video_url) {
+            thumbnail.addEventListener('click', () => {
+                this.openVideoModal(exercise.video_url);
+            });
+            thumbnail.style.cursor = 'pointer';
+        }
+        
+        return card;
+    }
+    
+    extractVideoId(url) {
+        if (!url) return null;
+        
+        // Handle different YouTube URL formats
+        let videoId = null;
+        
+        if (url.includes('youtube.com/watch?v=')) {
+            videoId = url.split('v=')[1];
+            if (videoId && videoId.includes('&')) {
+                videoId = videoId.split('&')[0];
+            }
+        } else if (url.includes('youtu.be/')) {
+            videoId = url.split('youtu.be/')[1];
+            if (videoId && videoId.includes('?')) {
+                videoId = videoId.split('?')[0];
+            }
+        } else if (url.includes('youtube.com/embed/')) {
+            videoId = url.split('embed/')[1];
+            if (videoId && videoId.includes('?')) {
+                videoId = videoId.split('?')[0];
+            }
+        }
+        
+        return videoId;
+    }
+    
+    openVideoModal(videoUrl) {
+        if (!videoUrl) return;
+        
+        const videoId = this.extractVideoId(videoUrl);
+        if (!videoId) return;
+        
+        const videoPlayer = document.getElementById('videoPlayer');
+        videoPlayer.innerHTML = `
+            <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
+                    frameborder="0" 
+                    allowfullscreen 
+                    allow="autoplay; encrypted-media">
+            </iframe>
+        `;
+        
+        document.getElementById('videoModal').style.display = 'block';
+    }
+    
+    closeExerciseModal() {
+        document.getElementById('exerciseModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    closeVideoModal() {
+        document.getElementById('videoModal').style.display = 'none';
+        document.getElementById('videoPlayer').innerHTML = '';
+    }
+    
+    handleTouchStart(e, card) {
+        if (this.animationLocked) return;
+        
+        this.startX = e.touches ? e.touches[0].clientX : e.clientX;
+        this.startY = e.touches ? e.touches[0].clientY : e.clientY;
+        this.isDragging = false;
+        this.hasMoved = false;
+        
+        card.style.transition = 'none';
+    }
+    
+    handleTouchMove(e, card) {
+        if (this.animationLocked) return;
+        
+        this.currentX = e.touches ? e.touches[0].clientX : e.clientX;
+        this.currentY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        const diffX = this.currentX - this.startX;
+        const diffY = this.currentY - this.startY;
+        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+        
+        // Mark as moved if any movement detected
+        if (distance > 5) {
+            this.hasMoved = true;
+        }
+        
+        // Only start dragging on significant horizontal movement
+        if (Math.abs(diffX) > 20 && Math.abs(diffX) > Math.abs(diffY)) {
+            this.isDragging = true;
+            e.preventDefault();
+            
+            // Apply swipe visual feedback
+            const rotation = diffX * 0.1;
+            const opacity = 1 - Math.abs(diffX) / 300;
+            
+            card.style.transform = `translateX(${diffX}px) rotate(${rotation}deg) scale(0.95)`;
+            card.style.opacity = Math.max(0.3, opacity);
+        }
+    }
+    
+    handleTouchEnd(e, card) {
+        if (this.animationLocked) return;
+        
+        const diffX = this.currentX - this.startX;
+        
+        if (this.isDragging) {
+            // Handle swipe gesture
+            if (Math.abs(diffX) > 80) {
+                this.handleCardSwipe();
+            } else {
+                // Snap back
+                card.style.transition = 'all 0.3s ease';
+                card.style.transform = 'scale(1) translateY(0px)';
+                card.style.opacity = '1';
+            }
+            
+            setTimeout(() => {
+                this.isDragging = false;
+                this.hasMoved = false;
+            }, 100);
+        } else if (!this.hasMoved) {
+            // Handle tap - only if no movement occurred
+            this.toggleWeekExpansion(this.cardStack[0]);
+            this.isDragging = false;
+            this.hasMoved = false;
+        } else {
+            // Movement occurred but not enough for swipe - reset
+            card.style.transition = 'all 0.3s ease';
+            card.style.transform = 'scale(1) translateY(0px)';
+            card.style.opacity = '1';
+            this.isDragging = false;
+            this.hasMoved = false;
+        }
+    }
+    
+    handleCardSwipe() {
+        // Prevent multiple animations
+        if (this.animationLocked || this.cardStack.length === 0) return;
+        
+        this.animationLocked = true;
+        const topCard = this.cardStack[0];
+        
+        // Step 1: Animate top card out (forward)
+        topCard.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        topCard.classList.add('swiping-right');
+        
+        // Step 2: After top card animation, move it to back and reposition stack
+        setTimeout(() => {
+            this.moveTopCardToBack(topCard);
+        }, 400);
+    }
+    
+    handleCardSwipeBackward() {
+        // Prevent multiple animations
+        if (this.animationLocked || this.cardStack.length === 0) return;
+        
+        this.animationLocked = true;
+        const bottomCard = this.cardStack[this.cardStack.length - 1];
+        
+        // Step 1: Move bottom card to front instantly
+        this.cardStack.pop();
+        this.cardStack.unshift(bottomCard);
+        
+        // Step 2: Position it off-screen left, then animate in
+        bottomCard.style.transition = 'none';
+        bottomCard.style.transform = 'translateX(-100%) rotate(-10deg) scale(0.8)';
+        bottomCard.style.opacity = '0';
+        bottomCard.style.zIndex = this.totalWeeks;
+        
+        // Step 3: Animate it into position
+        setTimeout(() => {
+            bottomCard.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            bottomCard.style.transform = 'scale(1) translateY(0px)';
+            bottomCard.style.opacity = '1';
+            
+            // Reposition other cards
+            this.repositionStack();
+            
+            // Update current week index (backward)
+            this.currentWeek = (this.currentWeek - 1 + this.totalWeeks) % this.totalWeeks;
+            
+            // Reset selected week
+            this.selectedWeek = null;
+        }, 50);
+    }
+    
+    moveTopCardToBack(topCard) {
+        // Remove from front, add to back
+        this.cardStack.shift();
+        this.cardStack.push(topCard);
+        
+        // Reset top card styles immediately (it's now at back)
+        topCard.classList.remove('swiping-left', 'swiping-right');
+        topCard.style.transition = 'none';
+        topCard.style.transform = 'scale(0.8) translateY(40px)';
+        topCard.style.opacity = '0.7';
+        topCard.style.zIndex = '1';
+        
+        // Hide expanded section
+        topCard.querySelector('.days-section').style.display = 'none';
+        
+        // Reset selected week
+        this.selectedWeek = null;
+        
+        // Step 3: Smoothly reposition all remaining cards
+        this.repositionStack();
+        
+        // Update current week index
+        this.currentWeek = (this.currentWeek + 1) % this.totalWeeks;
+    }
+    
+    repositionStack() {
+        // Animate all cards to their new positions
+        this.cardStack.forEach((card, index) => {
+            card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.zIndex = this.totalWeeks - index;
+            
+            if (index === 0) {
+                card.style.transform = 'scale(1) translateY(0px)';
+                card.style.opacity = '1';
+            } else if (index === 1) {
+                card.style.transform = 'scale(0.95) translateY(10px)';
+                card.style.opacity = '1';
+            } else if (index === 2) {
+                card.style.transform = 'scale(0.9) translateY(20px)';
+                card.style.opacity = '1';
+            } else if (index === 3) {
+                card.style.transform = 'scale(0.85) translateY(30px)';
+                card.style.opacity = '1';
+            } else {
+                card.style.transform = 'scale(0.8) translateY(40px)';
+                card.style.opacity = '0.7';
+            }
+        });
+        
+        // Update indicators
+        document.querySelectorAll('.swipe-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === 0);
+        });
+        
+        // Unlock animation after repositioning is complete
+        setTimeout(() => {
+            this.animationLocked = false;
+            // Reset selected week when cards change
+            this.selectedWeek = null;
+        }, 300);
+    }
+}
+
+// Schedule workout function
+function scheduleWorkout() {
+    const now = new Date();
+    const optimalTime = new Date();
+    optimalTime.setHours(18, 0, 0, 0); // 6 PM
+    
+    // If it's past 6 PM today, schedule for tomorrow
+    if (now.getHours() >= 18) {
+        optimalTime.setDate(optimalTime.getDate() + 1);
+    }
+    
+    const timeString = optimalTime.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+    
+    alert(`Workout scheduled for ${timeString}!\n\nReminder: This is your optimal performance time for maximum results.`);
+}
+
+// View foods function
+function viewFoods() {
+    const proteinFoods = [
+        { name: 'Greek Yogurt (1 cup)', protein: '20g', calories: '130' },
+        { name: 'Chicken Breast (100g)', protein: '31g', calories: '165' },
+        { name: 'Eggs (2 large)', protein: '12g', calories: '140' },
+        { name: 'Cottage Cheese (1/2 cup)', protein: '14g', calories: '90' },
+        { name: 'Tuna (1 can)', protein: '25g', calories: '120' },
+        { name: 'Protein Shake', protein: '25g', calories: '120' },
+        { name: 'Almonds (1 oz)', protein: '6g', calories: '160' },
+        { name: 'Quinoa (1 cup cooked)', protein: '8g', calories: '220' }
+    ];
+    
+    let foodList = 'High-Protein Foods to Boost Your Intake:\n\n';
+    proteinFoods.forEach(food => {
+        foodList += `• ${food.name}: ${food.protein} protein, ${food.calories} calories\n`;
+    });
+    
+    foodList += '\nTip: Combine 2-3 of these foods to easily reach your 15g protein goal!';
+    
+    alert(foodList);
+}
+
+// Initialize app
+let app;
+document.addEventListener('DOMContentLoaded', () => {
+    app = new StackedCardWorkoutApp();
+});
+</script>
+
+{% endblock %}

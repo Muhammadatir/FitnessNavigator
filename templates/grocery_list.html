@@ -1,0 +1,176 @@
+{% extends 'layout.html' %}
+
+{% block title %}Grocery List - Fitness Navigator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">🛒 Weekly Grocery List</h4>
+                    <small>Based on your personalized diet plan</small>
+                </div>
+                <div class="card-body">
+                    {% for category, items in grocery_list.items() %}
+                        {% if items %}
+                        <div class="mb-4">
+                            <h5 class="text-success">{{ category }}</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>✓</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item, quantity in items.items() %}
+                                        <tr>
+                                            <td>{{ item }}</td>
+                                            <td><span class="badge bg-primary">{{ quantity }}</span></td>
+                                            <td><input type="checkbox" class="form-check-input grocery-check"></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📋 Shopping Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Diet Plan for:</strong><br>
+                        {{ user_data.gender.title() }}, {{ user_data.age }} years
+                    </div>
+                    <div class="mb-3">
+                        <strong>Food Preference:</strong><br>
+                        {{ user_data.food_preference.title() }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Valid for:</strong><br>
+                        7 days
+                    </div>
+                    
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="shopping-progress">
+                            <span id="progress-text">0% Complete</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('download_grocery_pdf') }}" class="btn btn-success">
+                            📄 Download PDF
+                        </a>
+                        <button class="btn btn-outline-success" onclick="printList()">
+                            🖨️ Print List
+                        </button>
+                        <button class="btn btn-outline-info" onclick="shareList()">
+                            📤 Share List
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">💡 Shopping Tips</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li>🥬 Buy fresh vegetables first</li>
+                        <li>🥩 Choose lean cuts of meat</li>
+                        <li>🌾 Opt for whole grain products</li>
+                        <li>📅 Check expiry dates</li>
+                        <li>💰 Compare prices for best deals</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.grocery-check:checked + td {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.table tr.completed {
+    background-color: #d4edda !important;
+}
+
+.card-header {
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.grocery-check');
+    const progressBar = document.getElementById('shopping-progress');
+    const progressText = document.getElementById('progress-text');
+    
+    function updateProgress() {
+        const total = checkboxes.length;
+        const checked = document.querySelectorAll('.grocery-check:checked').length;
+        const percentage = total > 0 ? Math.round((checked / total) * 100) : 0;
+        
+        progressBar.style.width = percentage + '%';
+        progressText.textContent = percentage + '% Complete';
+        
+        if (percentage === 100) {
+            progressBar.classList.remove('bg-success');
+            progressBar.classList.add('bg-warning');
+            progressText.textContent = '🎉 Shopping Complete!';
+        } else {
+            progressBar.classList.remove('bg-warning');
+            progressBar.classList.add('bg-success');
+        }
+    }
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('tr');
+            if (this.checked) {
+                row.classList.add('completed');
+            } else {
+                row.classList.remove('completed');
+            }
+            updateProgress();
+        });
+    });
+    
+    updateProgress();
+});
+
+function printList() {
+    window.print();
+}
+
+function shareList() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'My Grocery List',
+            text: 'Check out my personalized grocery list from Fitness Navigator!',
+            url: window.location.href
+        });
+    } else {
+        // Fallback - copy to clipboard
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Link copied to clipboard!');
+        });
+    }
+}
+</script>
+{% endblock %}

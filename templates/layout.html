@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}The Web Workout - Personalized Fitness Plans{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/notification-fix.css') }}" rel="stylesheet">
+    
+    <!-- AI Chat CSS -->
+    <style>
+        .ai-chat-trigger {
+            position: fixed !important;
+            bottom: 20px !important;
+            left: 20px !important;
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 50% !important;
+            background-color: #007bff !important;
+            color: white !important;
+            font-size: 28px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+            z-index: 99999 !important;
+        }
+
+        .ai-chat-container {
+            position: fixed !important;
+            bottom: 90px !important;
+            left: 20px !important;
+            width: 350px !important;
+            height: 500px !important;
+            background-color: #ffffff !important;
+            border-radius: 10px !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+            display: none !important;
+            z-index: 99999 !important;
+        }
+
+        .ai-chat-container.active {
+            display: flex !important;
+        }
+    </style>
+    <link href="{{ url_for('static', filename='css/ai-chat.css') }}" rel="stylesheet">
+    
+    <!-- Initialize environment variables -->
+    <script>
+        window.env = {
+            GEMINI_API_KEY: "{{ config.GEMINI_API_KEY | tojson | safe }}"
+        };
+        console.log('Environment initialized:', window.env.GEMINI_API_KEY ? 'API key present' : 'API key missing');
+    </script>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-dumbbell me-2"></i><span class="brand-text">SmartFit</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">🚀 Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/challenges' %}active{% endif %}" href="{{ url_for('challenges') }}">🏆 Challenges</a>
+                    </li>
+                    {% if 'user_data' in session %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            📋 My Plans
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('diet_plan') }}">🍽️ Diet Plan</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('workout_plan') }}">💪 Workout Plan</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('progress') }}">📊 Progress</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            🤖 AI Tools
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('meal_scanner') }}">📸 Meal Scanner</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('fitness_buddy') }}">🎤 Voice Coach</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('body_tracker') }}">📊 Body Tracker</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/faq' %}active{% endif %}" href="{{ url_for('faq') }}">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/contact' %}active{% endif %}" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-info">
+                        <h3 class="mb-3"><i class="fas fa-dumbbell me-2"></i>SmartFit</h3>
+                        <p>Your journey to a healthier, happier you starts here. Get personalized diet and workout plans tailored to your specific needs and goals.</p>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-links">
+                        <h5>Quick Links</h5>
+                        <ul>
+                            <li><a href="{{ url_for('index') }}">Home</a></li>
+                            {% if 'user_data' in session %}
+                            <li><a href="{{ url_for('diet_plan') }}">Diet Plan</a></li>
+                            <li><a href="{{ url_for('workout_plan') }}">Workout Plan</a></li>
+                            {% endif %}
+                            <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-links">
+                        <h5>Resources</h5>
+                        <ul>
+                            <li><a href="#">Nutritional Guidelines</a></li>
+                            <li><a href="#">Exercise Library</a></li>
+                            <li><a href="#">Fitness Blog</a></li>
+                            <li><a href="#">Success Stories</a></li>
+                            <li><a href="#">Wellness Tips</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-links">
+                        <h5>Contact Us</h5>
+                        <ul>
+                            <li><i class="fas fa-map-marker-alt me-2"></i> 123 Fitness Street, Health City</li>
+                            <li><i class="fas fa-phone me-2"></i> +1 234 567 8900</li>
+                            <li><i class="fas fa-envelope me-2"></i> info@fitlife.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; <span id="current-year">2025</span> SmartFit. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- YouTube iFrame API and Video Handler -->
+    <script src="{{ url_for('static', filename='js/video-handler.js') }}"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Inject environment variables
+        console.log('Setting up environment...');
+        window.env = {
+            GEMINI_API_KEY: "{{ config.GEMINI_API_KEY }}"
+        };
+        console.log('Environment setup complete');
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ai-chat.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/session-persistence.js') }}" defer></script>
+    
+    {% if 'user_data' in session %}
+    <script>
+        window.sessionData = {
+            user_data: {{ session['user_data']|tojson }},
+            diet_plan: {{ session.get('diet_plan', {})|tojson }},
+            workout_plan: {{ session.get('workout_plan', {})|tojson }}
+        };
+    </script>
+    {% endif %}
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

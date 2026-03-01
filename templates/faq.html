@@ -1,0 +1,286 @@
+{% extends 'layout.html' %}
+
+{% block title %}Frequently Asked Questions - The Web Workout{% endblock %}
+
+{% block content %}
+<!-- FAQ Header -->
+<section class="page-header bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-4">Frequently Asked Questions</h1>
+        <p class="lead">Get answers to common questions about fitness, nutrition, and our personalized plans</p>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="accordion" id="faqAccordion">
+                    <!-- General Questions -->
+                    <h3 class="text-center section-title mb-4" style="color: white !important;">General Questions</h3>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                                How are the personalized plans generated?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse1" class="accordion-collapse collapse show" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Our personalized plans are created based on several factors including your age, gender, height, weight, BMI, food preferences, and workout intensity preference. We use these inputs to calculate your BMI and generate diet and workout plans that are specifically tailored to your needs and goals.</p>
+                                <p>The diet plans vary based on your gender, food preference (vegetarian or non-vegetarian), and BMI category. Workout plans are designed considering your gender and desired workout intensity level (easy, intermediate, or hardcore).</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                                What is BMI and why is it important?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>BMI (Body Mass Index) is a numerical value derived from your weight and height. It's a screening tool that can indicate whether you're underweight, normal weight, overweight, or obese based on your body mass relative to your height.</p>
+                                <p>The formula for BMI is: weight (kg) / [height (m)]²</p>
+                                <p>BMI Categories:</p>
+                                <ul>
+                                    <li><strong>Below 18.5:</strong> Underweight</li>
+                                    <li><strong>18.5-24.9:</strong> Normal weight</li>
+                                    <li><strong>25.0-29.9:</strong> Overweight</li>
+                                    <li><strong>30.0 and above:</strong> Obese</li>
+                                </ul>
+                                <p>BMI is important because it helps determine your general health risk and guides appropriate diet and exercise recommendations. However, it's important to note that BMI is just one factor and doesn't account for muscle mass, bone density, or overall body composition.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                                Can I change my plan after it's generated?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Yes, you can generate a new plan at any time by returning to the home page and submitting the form with updated information. If your goals or preferences change, simply fill out the form again with your new details.</p>
+                                <p>We recommend reassessing your plan every 4-6 weeks as your body adapts to your current routine, or whenever you experience significant changes in weight, fitness level, or dietary preferences.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diet Questions -->
+                    <h3 class="text-center section-title mb-4 mt-5" style="color: white !important;">Diet and Nutrition</h3>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                                How do the vegetarian and non-vegetarian diet plans differ?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Our vegetarian diet plans focus on plant-based protein sources such as legumes, tofu, tempeh, seitan, nuts, seeds, and dairy products. These plans are carefully designed to ensure you receive adequate protein, iron, zinc, vitamin B12, and omega-3 fatty acids, which can sometimes be lower in vegetarian diets.</p>
+                                <p>Non-vegetarian diet plans incorporate animal protein sources like lean meat, poultry, fish, eggs, and dairy, which provide complete proteins and are naturally rich in vitamins like B12 and minerals like iron in highly bioavailable forms.</p>
+                                <p>Both diet plans are nutritionally balanced and designed to support your fitness goals while aligning with your dietary preferences.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading5">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                                Should I count calories while following the diet plan?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>While our meal plans include approximate calorie ranges, strict calorie counting isn't necessary for most people. The plans are designed to provide appropriate portions and balanced nutrition based on your BMI category and goals.</p>
+                                <p>Instead of counting calories, we recommend focusing on:</p>
+                                <ul>
+                                    <li>Following the portion sizes suggested in the meal plans</li>
+                                    <li>Eating mindfully and listening to your body's hunger signals</li>
+                                    <li>Eating slowly to allow your body to register fullness</li>
+                                    <li>Staying hydrated throughout the day</li>
+                                </ul>
+                                <p>If you have specific athletic or medical goals that require precise nutrition tracking, consider consulting with a registered dietitian for personalized guidance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading6">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse6" aria-expanded="false" aria-controls="faqCollapse6">
+                                Can I modify the diet plan if I have food allergies?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse6" class="accordion-collapse collapse" aria-labelledby="faqHeading6" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Yes, you should always modify the meal plans to accommodate food allergies or intolerances. Use these substitution principles:</p>
+                                <ul>
+                                    <li><strong>For dairy allergies:</strong> Replace dairy milk with almond, soy, or oat milk; use plant-based yogurts and dairy-free cheese alternatives.</li>
+                                    <li><strong>For gluten intolerance:</strong> Substitute wheat products with gluten-free alternatives like rice, quinoa, corn, or certified gluten-free oats.</li>
+                                    <li><strong>For nut allergies:</strong> Replace nuts with seeds (pumpkin, sunflower, or sesame) or legumes for protein and healthy fats.</li>
+                                    <li><strong>For soy allergies:</strong> Use other legumes, meat (if non-vegetarian), or seitan as protein alternatives.</li>
+                                </ul>
+                                <p>The key is to substitute with foods that provide similar nutritional profiles. If you have multiple or severe allergies, consider consulting with a registered dietitian for more personalized guidance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Workout Questions -->
+                    <h3 class="text-center section-title mb-4 mt-5" style="color: white !important;">Workouts and Exercise</h3>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading7">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse7" aria-expanded="false" aria-controls="faqCollapse7">
+                                What's the difference between easy, intermediate, and hardcore workout plans?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse7" class="accordion-collapse collapse" aria-labelledby="faqHeading7" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Easy Workout Plans:</strong></p>
+                                <ul>
+                                    <li>Designed for beginners or those returning to exercise after a long break</li>
+                                    <li>Focus on building basic strength, mobility, and cardiovascular fitness</li>
+                                    <li>Lower volume and intensity with more rest days</li>
+                                    <li>Emphasis on proper form and technique</li>
+                                    <li>Typically 2-3 sets per exercise with longer rest periods</li>
+                                </ul>
+                                
+                                <p><strong>Intermediate Workout Plans:</strong></p>
+                                <ul>
+                                    <li>Suitable for those with some fitness experience (6+ months of consistent training)</li>
+                                    <li>Increased volume, intensity, and exercise complexity</li>
+                                    <li>More variety in training methods and techniques</li>
+                                    <li>Typically 3-4 sets per exercise with moderate rest periods</li>
+                                    <li>Introduction of more compound movements and some advanced techniques</li>
+                                </ul>
+                                
+                                <p><strong>Hardcore Workout Plans:</strong></p>
+                                <ul>
+                                    <li>Designed for experienced fitness enthusiasts (1+ years of consistent training)</li>
+                                    <li>High volume, intensity, and exercise complexity</li>
+                                    <li>Advanced training techniques like supersets, drop sets, and metabolic conditioning</li>
+                                    <li>Typically 4+ sets per exercise with shorter rest periods</li>
+                                    <li>More demanding cardiovascular work and challenging strength training</li>
+                                </ul>
+                                
+                                <p>Choose the plan that matches your current fitness level. It's better to start with an easier plan and progress than to risk injury with a plan that's too advanced.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading8">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse8" aria-expanded="false" aria-controls="faqCollapse8">
+                                Do I need special equipment for the workouts?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse8" class="accordion-collapse collapse" aria-labelledby="faqHeading8" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Our workout plans are designed to be flexible and adaptable to different equipment situations:</p>
+                                
+                                <p><strong>Minimal Equipment Needed:</strong></p>
+                                <ul>
+                                    <li>Easy plans: Most exercises require little to no equipment, with some using basic dumbbells or resistance bands that can be substituted with household items if needed.</li>
+                                    <li>Intermediate plans: Dumbbells, resistance bands, and possibly a pull-up bar or sturdy substitute (like a door frame pull-up bar).</li>
+                                    <li>Hardcore plans: A wider range of equipment is ideal, including dumbbells of various weights, resistance bands, a pull-up bar, and possibly a bench.</li>
+                                </ul>
+                                
+                                <p><strong>Substitutions:</strong></p>
+                                <ul>
+                                    <li>Dumbbells can be replaced with filled water bottles, canned goods, or other household items with appropriate weight.</li>
+                                    <li>Resistance bands can be substituted with towels for some exercises.</li>
+                                    <li>Benches can be replaced with a sturdy chair or ottoman.</li>
+                                </ul>
+                                
+                                <p>If you have access to a gym, you'll have all the equipment needed. For home workouts, many exercises can be modified to use bodyweight or household items. The most important thing is consistency rather than having perfect equipment.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading9">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse9" aria-expanded="false" aria-controls="faqCollapse9">
+                                How should I warm up before workouts?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse9" class="accordion-collapse collapse" aria-labelledby="faqHeading9" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>A proper warm-up is essential for preventing injuries and optimizing performance. We recommend the following warm-up routine before starting your workout:</p>
+                                
+                                <ol>
+                                    <li><strong>5-10 minutes of light cardio:</strong> Jogging in place, jumping jacks, jump rope, or brisk walking to increase heart rate and blood flow to muscles.</li>
+                                    <li><strong>Dynamic stretching:</strong> Unlike static stretching (holding a position), dynamic stretching involves movement and helps prepare the muscles you'll be using in your workout. Include:
+                                        <ul>
+                                            <li>Arm circles (forward and backward)</li>
+                                            <li>Leg swings (forward/back and side to side)</li>
+                                            <li>Hip circles</li>
+                                            <li>Torso twists</li>
+                                            <li>Walking lunges with a twist</li>
+                                            <li>Bodyweight squats</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Movement-specific preparation:</strong> Perform 1-2 sets of the first few exercises in your workout with very light weight or just bodyweight to practice the movement pattern.</li>
+                                </ol>
+                                
+                                <p>After your workout, cool down with 5-10 minutes of light activity followed by static stretching, holding each stretch for 20-30 seconds.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item faq-item fade-in mb-3">
+                        <h2 class="accordion-header" id="faqHeading10">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse10" aria-expanded="false" aria-controls="faqCollapse10">
+                                How long before I see results?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse10" class="accordion-collapse collapse" aria-labelledby="faqHeading10" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Results vary based on individual factors including genetics, starting fitness level, consistency, diet adherence, sleep quality, and stress levels. However, here's a general timeline of what you might expect:</p>
+                                
+                                <p><strong>First 2-4 weeks:</strong></p>
+                                <ul>
+                                    <li>Improved energy levels and mood</li>
+                                    <li>Better sleep quality</li>
+                                    <li>Increased strength (neurological adaptation rather than muscle growth)</li>
+                                    <li>Possibly a slight weight change, though this could be water weight</li>
+                                </ul>
+                                
+                                <p><strong>1-3 months:</strong></p>
+                                <ul>
+                                    <li>Noticeable improvements in strength and endurance</li>
+                                    <li>Possible visible changes in body composition</li>
+                                    <li>Clothes fitting differently</li>
+                                    <li>Improved resting heart rate and recovery</li>
+                                </ul>
+                                
+                                <p><strong>3-6 months:</strong></p>
+                                <ul>
+                                    <li>Significant changes in body composition</li>
+                                    <li>Substantial strength and endurance gains</li>
+                                    <li>Noticeable muscle definition (depending on goals)</li>
+                                    <li>Improved flexibility and mobility</li>
+                                </ul>
+                                
+                                <p>The key to seeing results is consistency. It's better to follow the plan 80% consistently for six months than to follow it 100% for two weeks and then quit. Remember that fitness is a lifelong journey, not a short-term fix.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Still Have Questions -->
+<section class="cta-section py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="mb-4" style="color: black !important;">Still Have Questions?</h2>
+        <p class="lead mb-4" style="color: black !important;">We're here to help you on your fitness journey. Feel free to reach out for personalized assistance.</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">Contact Us</a>
+    </div>
+</section>
+{% endblock %}

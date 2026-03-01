@@ -1,0 +1,607 @@
+{% extends 'layout.html' %}
+
+{% block title %}Your Personalized Workout Plan - The Web Workout{% endblock %}
+
+{% block content %}
+
+<!-- Workout Plan Header -->
+<section class="page-header text-white text-center py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url({{ 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'|safe }}) no-repeat center center; background-size: cover;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4">Your Personalized Workout Plan</h1>
+                <p class="lead">Tailored to your fitness level and goals</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{{ url_for('download_workout_pdf') }}" class="btn btn-light btn-lg">
+                    📄 Download PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- User Stats Section -->
+<section class="user-stats py-5 diet-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Your Profile</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Age
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.age }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Gender
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.gender|capitalize }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Height
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.height }} cm</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Weight
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.weight }} kg</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Food Preference
+                                        <span class="badge bg-primary rounded-pill">
+                                            {% if user_data.food_preference == 'veg' %}
+                                                Vegetarian
+                                            {% else %}
+                                                Non-Vegetarian
+                                            {% endif %}
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Workout Intensity
+                                        <span class="badge bg-primary rounded-pill">{{ user_data.intensity|capitalize }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BMI Result Section -->
+<section class="bmi-section py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% set bmi_class = '' %}
+                {% if user_data.bmi_category == 'Underweight' %}
+                    {% set bmi_class = 'bmi-underweight' %}
+                {% elif user_data.bmi_category == 'Normal weight' %}
+                    {% set bmi_class = 'bmi-normal' %}
+                {% elif user_data.bmi_category == 'Overweight' %}
+                    {% set bmi_class = 'bmi-overweight' %}
+                {% else %}
+                    {% set bmi_class = 'bmi-obese' %}
+                {% endif %}
+                
+                <div class="bmi-result {{ bmi_class }} text-center p-4" style="background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url({{ 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}) no-repeat center center; background-size: cover; border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <img src="{{ 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80'|safe }}" alt="BMI Chart" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h3 class="mb-1">Your BMI: {{ user_data.bmi }}</h3>
+                            <p class="lead mb-0">Category: {{ user_data.bmi_category }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3 mb-5">
+                    <a href="{{ url_for('diet_plan') }}" class="btn btn-primary">View Your Diet Plan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Workout Plan Section -->
+<section class="workout-plan-section py-5">
+    <div class="container">
+        <h2 class="text-center section-title mb-5 fade-in">Monthly Workout Plan - {{ user_data.intensity|capitalize }} Intensity</h2>
+
+        <!-- Workout Carousel Container -->
+        <div class="workout-carousel-container">
+            <div class="workout-carousel" id="workoutCarousel">
+                {% for week, days in workout_plan.items() %}
+                <div class="workout-card" data-week="{{ week }}">
+                    <div class="workout-card-header">
+                        <h3>{{ week }}</h3>
+                        <span class="week-badge">6 Days Plan</span>
+                    </div>
+                    
+                    <div class="workout-image">
+                        <img src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=800&h=300&fit=crop" alt="{{ week }} Workout">
+                    </div>
+                    
+                    <div class="workout-details" style="display: none;">
+                        {% set ordered_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] %}
+                        {% for day in ordered_days %}
+                            {% if day in days %}
+                                {% set workout = days[day] %}
+                                <div class="day-workout">
+                                    <h5>{{ day }} - {{ workout.focus }}</h5>
+                                    <div class="exercises-list">
+                                        {% for exercise in workout.exercises %}
+                                        <div class="exercise-item">
+                                            <strong>{{ exercise.name }}</strong>
+                                            <span>{{ exercise.details }}</span>
+                                            {% if exercise.video_url %}
+                                            <div class="exercise-video">
+                                                <iframe src="https://www.youtube-nocookie.com/embed/{{ exercise.video_url.split('v=')[-1] if 'v=' in exercise.video_url else exercise.video_url.split('/')[-1] }}" frameborder="0" allowfullscreen></iframe>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if workout.notes %}
+                                    <div class="workout-notes">
+                                        <strong>Notes:</strong> {{ workout.notes }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Navigation Arrows -->
+            <button class="carousel-nav prev" id="prevBtn">‹</button>
+            <button class="carousel-nav next" id="nextBtn">›</button>
+            
+            <!-- Dots Indicator -->
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+.workout-carousel-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.workout-carousel {
+    display: flex;
+    transition: transform 0.3s ease;
+    cursor: grab;
+}
+
+.workout-carousel:active {
+    cursor: grabbing;
+}
+
+.workout-card {
+    min-width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.workout-card:hover {
+    transform: scale(1.02);
+}
+
+.workout-card.expanded {
+    min-height: 800px;
+}
+
+.day-workout {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.day-workout:last-child {
+    border-bottom: none;
+}
+
+.day-workout h5 {
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.exercise-video {
+    margin-top: 0.5rem;
+}
+
+.exercise-video iframe {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}
+
+.workout-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.workout-card-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.week-badge {
+    background: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.workout-image {
+    width: 100%;
+    height: 250px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.workout-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.exercises-list {
+    margin-bottom: 1rem;
+}
+
+.exercise-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.exercise-item:last-child {
+    border-bottom: none;
+}
+
+.exercise-item strong {
+    color: #333;
+    font-size: 1rem;
+}
+
+.exercise-item span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.workout-notes {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid #007bff;
+}
+
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-nav:hover {
+    background: rgba(0,0,0,0.9);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav.prev {
+    left: 20px;
+}
+
+.carousel-nav.next {
+    right: 20px;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #007bff;
+    transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+    .workout-card {
+        padding: 1rem;
+    }
+    
+    .workout-card-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .carousel-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .carousel-nav.prev {
+        left: 10px;
+    }
+    
+    .carousel-nav.next {
+        right: 10px;
+    }
+}
+</style>
+
+<script>
+class WorkoutCarousel {
+    constructor() {
+        this.carousel = document.getElementById('workoutCarousel');
+        this.cards = document.querySelectorAll('.workout-card');
+        this.prevBtn = document.getElementById('prevBtn');
+        this.nextBtn = document.getElementById('nextBtn');
+        this.dotsContainer = document.getElementById('carouselDots');
+        this.currentIndex = 0;
+        this.startX = 0;
+        this.currentX = 0;
+        this.isDragging = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.createDots();
+        this.bindEvents();
+        this.updateCarousel();
+    }
+    
+    createDots() {
+        this.cards.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = `dot ${index === 0 ? 'active' : ''}`;
+            dot.addEventListener('click', () => this.goToSlide(index));
+            this.dotsContainer.appendChild(dot);
+        });
+    }
+    
+    bindEvents() {
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+        
+        // Card click to expand
+        this.cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.carousel-nav')) {
+                    this.toggleCard(card);
+                }
+            });
+        });
+        
+        // Mouse events
+        this.carousel.addEventListener('mousedown', (e) => this.startDrag(e));
+        this.carousel.addEventListener('mousemove', (e) => this.drag(e));
+        this.carousel.addEventListener('mouseup', () => this.endDrag());
+        this.carousel.addEventListener('mouseleave', () => this.endDrag());
+        
+        // Touch events
+        this.carousel.addEventListener('touchstart', (e) => this.startDrag(e.touches[0]));
+        this.carousel.addEventListener('touchmove', (e) => this.drag(e.touches[0]));
+        this.carousel.addEventListener('touchend', () => this.endDrag());
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') this.prevSlide();
+            if (e.key === 'ArrowRight') this.nextSlide();
+        });
+    }
+    
+    toggleCard(card) {
+        const details = card.querySelector('.workout-details');
+        const isExpanded = card.classList.contains('expanded');
+        
+        if (isExpanded) {
+            details.style.display = 'none';
+            card.classList.remove('expanded');
+        } else {
+            details.style.display = 'block';
+            card.classList.add('expanded');
+        }
+    }
+    
+    startDrag(e) {
+        this.isDragging = true;
+        this.startX = e.clientX || e.pageX;
+        this.carousel.style.cursor = 'grabbing';
+    }
+    
+    drag(e) {
+        if (!this.isDragging) return;
+        
+        this.currentX = e.clientX || e.pageX;
+        const diffX = this.currentX - this.startX;
+        
+        if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                this.prevSlide();
+            } else {
+                this.nextSlide();
+            }
+            this.endDrag();
+        }
+    }
+    
+    endDrag() {
+        this.isDragging = false;
+        this.carousel.style.cursor = 'grab';
+    }
+    
+    prevSlide() {
+        this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.cards.length - 1;
+        this.updateCarousel();
+    }
+    
+    nextSlide() {
+        this.currentIndex = this.currentIndex < this.cards.length - 1 ? this.currentIndex + 1 : 0;
+        this.updateCarousel();
+    }
+    
+    goToSlide(index) {
+        this.currentIndex = index;
+        this.updateCarousel();
+    }
+    
+    updateCarousel() {
+        const translateX = -this.currentIndex * 100;
+        this.carousel.style.transform = `translateX(${translateX}%)`;
+        
+        // Update dots
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+}
+
+// Initialize carousel when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new WorkoutCarousel();
+});
+</script>
+
+
+    </div>
+</section>
+
+
+<!-- Health Problems Section -->
+<section class="health-problems py-5" style="background-color: #2c3e50;">
+    <div class="container">
+        <h2 class="text-center section-title mb-5 fade-in" style="color: white !important;">Common Health Problems & Precautions</h2>
+        <div class="row slide-in-left">
+            <!-- Heart -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Heart Health" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heartbeat feature-icon"></i>
+                        <h4 class="card-title">Heart Ailments</h4>
+                        <p class="card-text">Consult your doctor before starting any workout if you have a heart condition. Start slow and avoid high-intensity exercises unless cleared by a professional.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Arthritis -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Low Impact Exercise" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-bone feature-icon"></i>
+                        <h4 class="card-title">Osteoarthritis</h4>
+                        <p class="card-text">If you have arthritis or joint pain, focus on low-impact exercises like swimming or cycling. Always warm up and stretch properly.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Asthma -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Indoor Exercise" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lungs feature-icon"></i>
+                        <h4 class="card-title">Asthma</h4>
+                        <p class="card-text">Carry your inhaler and avoid outdoor workouts during high pollen or pollution days. Choose moderate-intensity activities and take breaks as needed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <!-- Obesity -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1571019613576-2b22c76fd955?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Gradual Exercise" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-weight-scale feature-icon"></i>
+                        <h4 class="card-title">Obesity</h4>
+                        <p class="card-text">Start with low-impact activities and gradually increase intensity. Combine exercise with a balanced diet for best results.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Diabetes -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Diabetes Management" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-diabetes feature-icon"></i>
+                        <h4 class="card-title">Diabetes</h4>
+                        <p class="card-text">Monitor your blood sugar before and after exercise. Keep snacks handy and avoid skipping meals before workouts.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Mental Health -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 fade-in">
+                    <img src="{{ 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'|safe }}" class="card-img-top" alt="Mental Health Exercise" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-brain feature-icon"></i>
+                        <h4 class="card-title">Mental Health</h4>
+                        <p class="card-text">Exercise can help reduce stress and anxiety. Start with activities you enjoy and set realistic goals for yourself.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section py-5 bg-gradient text-white text-center" style="background: linear-gradient(45deg, #007bff, #0056b3);">
+    <div class="container">
+        <h2 class="mb-4 slide-in-left" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Combine Fitness with Nutrition</h2>
+        <p class="lead mb-4 slide-in-right" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.2);">Follow your workout plan alongside your personalized diet for optimal results!</p>
+        <a href="{{ url_for('diet_plan') }}" class="btn btn-light btn-lg zoom-in shadow-sm">View Your Diet Plan</a>
+    </div>
+</section>
+
+{% endblock %}

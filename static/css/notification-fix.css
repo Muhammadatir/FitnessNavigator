@@ -1,0 +1,42 @@
+/* Notification Overlap Fix */
+/* This CSS file fixes notification overlapping issues without changing existing functionality */
+
+/* Force all notifications and toasts to appear below the navbar */
+.notification,
+.toast,
+div[class*="notification"],
+div[class*="toast"] {
+    top: 80px !important;
+    z-index: 1040 !important;
+}
+
+/* Ensure navbar stays on top */
+.navbar,
+.navbar-fixed-top,
+.fixed-top {
+    z-index: 1050 !important;
+}
+
+/* Stack multiple notifications properly */
+.notification:nth-child(2),
+.toast:nth-child(2) {
+    top: 140px !important;
+}
+
+.notification:nth-child(3),
+.toast:nth-child(3) {
+    top: 200px !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .notification,
+    .toast,
+    div[class*="notification"],
+    div[class*="toast"] {
+        top: 70px !important;
+        left: 10px !important;
+        right: 10px !important;
+        max-width: calc(100% - 20px) !important;
+    }
+}
