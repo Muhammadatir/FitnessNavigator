@@ -11,5 +11,8 @@
       "src": "/(.*)",
       "dest": "FitnessNavigator/app.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHONPATH": "FitnessNavigator"
+  }
 }
