@@ -1,3 +1,4 @@
+entrypoint = "FitnessNavigator/app.py"
 run = "cd FitnessNavigator && python app.py"
 
 [nix]
